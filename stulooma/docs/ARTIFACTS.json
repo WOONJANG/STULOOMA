@@ -1,0 +1,20 @@
+[
+  {
+    "platform": "linux",
+    "path": "out/make/zip/linux/x64/STULOOMA-linux-x64-0.1.0.zip",
+    "bytes": 128229776,
+    "sha256": "f753e534984e22cb21ebb657ce15057e7d67f06030bb0d66e168d7bf994167b6",
+    "zipCRCVerified": true,
+    "executable": "STULOOMA-linux-x64/STULOOMA",
+    "nativeRunVerified": true
+  },
+  {
+    "platform": "win32",
+    "path": "out/make/zip/win32/x64/STULOOMA-win32-x64-0.1.0.zip",
+    "bytes": 163617598,
+    "sha256": "7383eae4541fd5d7f88273a9e7a56065646d1ea729ffeb2edd78590ce90cc2d8",
+    "zipCRCVerified": true,
+    "executable": "STULOOMA-win32-x64/STULOOMA.exe",
+    "nativeRunVerified": false
+  }
+]

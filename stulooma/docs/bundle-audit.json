@@ -1,0 +1,476 @@
+{
+  "checkedOn": "2026-10-18",
+  "method": "Vite write:false generateBundle module renderedLength > 0, plus emitted font assets; every JS chunk SHA-256 compared with dist.",
+  "chunks": [
+    {
+      "fileName": "assets/index-DBP_zjvB.js",
+      "sha256": "130c2edd643f00f18de3a63acc18c453fb6c988d5452b0551e1e756e82dd4788",
+      "bytes": 1337130
+    }
+  ],
+  "packages": [
+    {
+      "name": "@babel/runtime",
+      "version": "7.29.10",
+      "installation": "node_modules/@babel/runtime",
+      "license": "MIT"
+    },
+    {
+      "name": "@fontsource-variable/noto-sans-kr",
+      "version": "5.3.1",
+      "installation": "node_modules/@fontsource-variable/noto-sans-kr",
+      "license": "OFL-1.1"
+    },
+    {
+      "name": "@react-three/drei",
+      "version": "10.7.9",
+      "installation": "node_modules/@react-three/drei",
+      "license": "MIT"
+    },
+    {
+      "name": "@react-three/fiber",
+      "version": "9.8.2",
+      "installation": "node_modules/@react-three/fiber",
+      "license": "MIT"
+    },
+    {
+      "name": "fflate",
+      "version": "0.8.3",
+      "installation": "node_modules/fflate",
+      "license": "MIT"
+    },
+    {
+      "name": "its-fine",
+      "version": "2.1.1",
+      "installation": "node_modules/its-fine",
+      "license": "MIT"
+    },
+    {
+      "name": "lucide-react",
+      "version": "1.59.0",
+      "installation": "node_modules/lucide-react",
+      "license": "ISC"
+    },
+    {
+      "name": "react",
+      "version": "19.3.1",
+      "installation": "node_modules/react",
+      "license": "MIT"
+    },
+    {
+      "name": "react-dom",
+      "version": "19.3.1",
+      "installation": "node_modules/react-dom",
+      "license": "MIT"
+    },
+    {
+      "name": "react-use-measure",
+      "version": "2.1.7",
+      "installation": "node_modules/react-use-measure",
+      "license": "MIT"
+    },
+    {
+      "name": "scheduler",
+      "version": "0.28.0",
+      "installation": "node_modules/scheduler",
+      "license": "MIT"
+    },
+    {
+      "name": "suspend-react",
+      "version": "0.1.3",
+      "installation": "node_modules/suspend-react",
+      "license": "MIT"
+    },
+    {
+      "name": "three",
+      "version": "0.186.1",
+      "installation": "node_modules/three",
+      "license": "MIT"
+    },
+    {
+      "name": "three-stdlib",
+      "version": "2.36.1",
+      "installation": "node_modules/three-stdlib",
+      "license": "MIT"
+    },
+    {
+      "name": "use-sync-external-store",
+      "version": "1.7.0",
+      "installation": "node_modules/use-sync-external-store",
+      "license": "MIT"
+    },
+    {
+      "name": "zustand",
+      "version": "5.0.15",
+      "installation": "node_modules/zustand",
+      "license": "MIT"
+    }
+  ],
+  "modules": [
+    {
+      "path": "node_modules/react/cjs/react.production.js",
+      "renderedLength": 15999,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/react/index.js",
+      "renderedLength": 176,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/scheduler/cjs/scheduler.production.js",
+      "renderedLength": 9064,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/scheduler/index.js",
+      "renderedLength": 188,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/react-dom/cjs/react-dom.production.js",
+      "renderedLength": 6270,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/react-dom/index.js",
+      "renderedLength": 468,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/react-dom/cjs/react-dom-client.production.js",
+      "renderedLength": 529556,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/react-dom/client.js",
+      "renderedLength": 473,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs",
+      "renderedLength": 183,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/utils/toLucideIconData.mjs",
+      "renderedLength": 375,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs",
+      "renderedLength": 423,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs",
+      "renderedLength": 234,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs",
+      "renderedLength": 287,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/build/defaultAttributes.mjs",
+      "renderedLength": 328,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/build/buildLucideIconNode.mjs",
+      "renderedLength": 2617,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/build/buildLucideIconForReact.mjs",
+      "renderedLength": 436,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs",
+      "renderedLength": 249,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/context.mjs",
+      "renderedLength": 265,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/Icon.mjs",
+      "renderedLength": 1363,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/createLucideIcon.mjs",
+      "renderedLength": 550,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/arrow-down.mjs",
+      "renderedLength": 317,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/arrow-up.mjs",
+      "renderedLength": 310,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/box.mjs",
+      "renderedLength": 479,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/check.mjs",
+      "renderedLength": 255,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/chevron-down.mjs",
+      "renderedLength": 272,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/copy.mjs",
+      "renderedLength": 397,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/download.mjs",
+      "renderedLength": 411,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/eye.mjs",
+      "renderedLength": 403,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/eye-off.mjs",
+      "renderedLength": 623,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/file-plus-corner.mjs",
+      "renderedLength": 586,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/folder-open.mjs",
+      "renderedLength": 434,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/image-plus.mjs",
+      "renderedLength": 589,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/layers.mjs",
+      "renderedLength": 622,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/lock-open.mjs",
+      "renderedLength": 402,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/lock.mjs",
+      "renderedLength": 367,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/maximize-2.mjs",
+      "renderedLength": 437,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/minus.mjs",
+      "renderedLength": 248,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/mouse-pointer-2.mjs",
+      "renderedLength": 400,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/plus.mjs",
+      "renderedLength": 291,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/redo-2.mjs",
+      "renderedLength": 348,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/rotate-ccw.mjs",
+      "renderedLength": 349,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/save.mjs",
+      "renderedLength": 495,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/shirt.mjs",
+      "renderedLength": 414,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/trash.mjs",
+      "renderedLength": 553,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/type.mjs",
+      "renderedLength": 388,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/undo-2.mjs",
+      "renderedLength": 349,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/upload.mjs",
+      "renderedLength": 402,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/lucide-react/dist/esm/icons/x.mjs",
+      "renderedLength": 282,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/fflate/esm/browser.js",
+      "renderedLength": 19667,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/three/build/three.core.js",
+      "renderedLength": 653939,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/three/build/three.module.js",
+      "renderedLength": 559738,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js",
+      "renderedLength": 1729,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/three/examples/jsm/utils/SkeletonUtils.js",
+      "renderedLength": 1039,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/three/examples/jsm/loaders/GLTFLoader.js",
+      "renderedLength": 84710,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/zustand/esm/vanilla.mjs",
+      "renderedLength": 1013,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/zustand/esm/react.mjs",
+      "renderedLength": 701,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/react/cjs/react-jsx-runtime.production.js",
+      "renderedLength": 871,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/react/jsx-runtime.js",
+      "renderedLength": 200,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js",
+      "renderedLength": 1824,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/use-sync-external-store/shim/index.js",
+      "renderedLength": 221,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js",
+      "renderedLength": 2351,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/use-sync-external-store/shim/with-selector.js",
+      "renderedLength": 223,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/zustand/esm/traditional.mjs",
+      "renderedLength": 990,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/suspend-react/index.js",
+      "renderedLength": 1942,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/its-fine/dist/index.js",
+      "renderedLength": 4196,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/@react-three/fiber/dist/events-e51d7528.esm.js",
+      "renderedLength": 259365,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/react-use-measure/dist/index.js",
+      "renderedLength": 4030,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+      "renderedLength": 4334,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/@babel/runtime/helpers/esm/extends.js",
+      "renderedLength": 364,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/three-stdlib/controls/EventDispatcher.js",
+      "renderedLength": 1587,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/three-stdlib/controls/OrbitControls.js",
+      "renderedLength": 26671,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/@react-three/drei/core/OrbitControls.js",
+      "renderedLength": 2231,
+      "chunk": "assets/index-DBP_zjvB.js"
+    },
+    {
+      "path": "node_modules/three/examples/jsm/exporters/GLTFExporter.js",
+      "renderedLength": 67615,
+      "chunk": "assets/index-DBP_zjvB.js"
+    }
+  ]
+}

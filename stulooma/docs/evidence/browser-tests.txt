@@ -1,0 +1,20 @@
+
+> stulooma@0.1.0 test:e2e
+> playwright test
+
+
+Running 4 tests using 1 worker
+
+(node:21855) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/autosave.spec.ts:6:1 › actual local IndexedDB autosave restores Korean front/back artwork after reload (9.0s)
+  ✓  2 tests/e2e/studio.spec.ts:89:1 › P0 반팔: PNG front/back editing, undo/redo, orbit, modes, project roundtrip, real transparent 2048 PNG (28.6s)
+  ✓  3 tests/e2e/studio.spec.ts:223:1 › P0 농구: front/back artwork and material survive save/open; GLB UV registration persists in library (22.0s)
+  ✓  4 tests/e2e/studio.spec.ts:310:1 › P0 malformed project, truncated GLB, and missing-UV GLB are rejected without losing the current project (4.6s)
+
+  4 passed (1.1m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
