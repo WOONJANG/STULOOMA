@@ -4,9 +4,9 @@
 
 ## Windows 실행
 
-**[STULOOMA 0.1.0 개발판 다운로드](https://github.com/WOONJANG/STULOOMA/releases/tag/v0.1.0-dev)**
+**[STULOOMA 0.2.0 개발판 다운로드](https://github.com/WOONJANG/STULOOMA/releases/tag/v0.2.0-dev)**
 
-1. 릴리스의 `STULOOMA-Windows-0.1.0.zip`을 받습니다.
+1. 릴리스 본문의 **Windows 실행 ZIP 다운로드** 링크를 누릅니다.
 2. ZIP 전체의 압축을 풉니다.
 3. `STULOOMA-win32-x64` 폴더의 `STULOOMA.exe`를 실행합니다.
 
@@ -14,7 +14,7 @@
 
 ## 구현·검증 범위
 
-독립 제작한 3D 의류 2종, 부위별 UV·색상·재질, 2D 이미지 이동·크기·회전, 텍스트, Undo/Redo, 저장·복원, PNG/JPG/GLB 출력, 사용자 GLB 등록과 로컬 복구를 제공합니다. Linux에서 자동 테스트 78개를 검증했습니다. 패턴 CAD·물리 착의 시뮬레이션 등은 미구현입니다.
+독립 제작한 3D 의류 2종, 부위별 UV·색상·재질, 2D 이미지 이동·크기·회전, 텍스트, Undo/Redo, 저장·복원, PNG/JPG/GLB 출력, 사용자 GLB 등록과 로컬 복구를 제공합니다. 0.2.0에서는 메뉴·명령 검색(Ctrl+K), 독립 스크롤 레이어 패널, 작업 공간 조절, 복사/붙여넣기·정렬·미세 이동, 2D 확대·팬·스냅, 반복 저장과 다른 이름 저장을 추가했습니다. Linux에서 자동 검사 91개를 통과했습니다. 실제 검증 결과는 아래 보고서에 기록합니다. 패턴 CAD·물리 착의 시뮬레이션 등은 미구현입니다.
 
 [검증 보고서](stulooma/docs/RESULTS.md) · [남은 기능과 제약](stulooma/docs/GAPS.md) · [라이선스 고지](stulooma/docs/LICENSES.md)
 

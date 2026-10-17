@@ -2,7 +2,7 @@
 
 한국어로 사용하는 로컬 3D 의류 디자인·목업 편집기입니다. 독립 제작한 반팔 티셔츠와 민소매 농구 상의에 PNG·텍스트를 배치하고, 실제 3D로 회전해 확인하며, 편집 가능한 `.stulooma` 프로젝트와 PNG/JPG/GLB를 저장합니다.
 
-현재 버전은 **0.1.0 개발판**입니다. 두 기본 의류의 편집·저장·복원·출력을 Linux에서 검증했습니다. Windows/macOS 실제 실행과 출시 검증은 남아 있습니다. 검증 결과와 한계는 [테스트 기록](docs/TEST_PLAN.md), [미구현·제약](docs/GAPS.md), [배포 안내](docs/RELEASE.md)에 구분해 기록합니다.
+현재 버전은 **0.2.0 개발판**입니다. 두 기본 의류의 편집·저장·복원·출력을 Linux에서 검증했습니다. Windows/macOS 실제 실행과 출시 검증은 남아 있습니다. 검증 결과와 한계는 [테스트 기록](docs/TEST_PLAN.md), [미구현·제약](docs/GAPS.md), [배포 안내](docs/RELEASE.md)에 구분해 기록합니다.
 
 ## 실행
 
@@ -37,6 +37,15 @@ source /workspace/.cache/system/display.env
 STULOOMA_CI_NO_SANDBOX=1 npm run test:desktop
 ```
 
+## 0.2.0 작업 공간 패치
+
+- 파일·편집·디자인·보기 메뉴와 `Ctrl/⌘+K` 명령 검색, 우클릭 레이어 메뉴
+- 라이브러리·속성 패널 너비/표시 상태 저장, 항상 접근할 수 있는 레이어 패널과 편집 기록
+- 레이어 복사/붙여넣기·정렬·미세 이동·이름 변경, 잠금 보호와 저장 상태 복원
+- 2D 확대·맞춤, Space/휠 이동, 그리드·스냅·스마트 가이드, 15° 회전
+- 데스크톱 `Ctrl/⌘+S` 반복 저장과 `Ctrl/⌘+Shift+S` 다른 이름으로 저장
+- PNG·GLB·프로젝트를 화면에 놓아 가져오기
+
 ## 기본 사용
 
 1. 왼쪽에서 반팔 또는 농구 유니폼을 선택합니다.
@@ -69,7 +78,7 @@ STULOOMA_CI_NO_SANDBOX=1 npm run test:desktop
 
 ## 실행 패키지
 
-이 환경에서 생성한 패키지는 Linux x64 ZIP(로컬 `out/make/zip/linux/x64/`)과 [Windows x64 Portable ZIP](https://github.com/WOONJANG/STULOOMA/releases/tag/v0.1.0-dev)입니다. 실행 결과와 무결성 정보는 [RELEASE.md](docs/RELEASE.md)에 기록합니다. Windows에서는 ZIP을 풀어 `STULOOMA.exe`, Linux에서는 `STULOOMA`를 실행합니다. macOS 앱 번들은 이 Linux 작업에서 검증하지 않았습니다. 배포 ZIP은 서명되지 않은 개발용이며 Windows 네이티브 실행·코드 서명·설치 연결은 별도 확인이 필요합니다.
+이 환경에서 생성한 패키지는 Linux x64 ZIP(로컬 `out/make/zip/linux/x64/`)과 [Windows x64 Portable ZIP](https://github.com/WOONJANG/STULOOMA/releases/tag/v0.2.0-dev)입니다. 실행 결과와 무결성 정보는 [RELEASE.md](docs/RELEASE.md)에 기록합니다. Windows에서는 ZIP을 풀어 `STULOOMA.exe`, Linux에서는 `STULOOMA`를 실행합니다. macOS 앱 번들은 이 Linux 작업에서 검증하지 않았습니다. 배포 ZIP은 서명되지 않은 개발용이며 Windows 네이티브 실행·코드 서명·설치 연결은 별도 확인이 필요합니다.
 
 ## 자료와 라이선스
 

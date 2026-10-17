@@ -1,0 +1,42 @@
+
+> stulooma@0.2.0 test:e2e
+> playwright test
+
+[WebServer] (node:13132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13145) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:13169) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:34:46 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[WebServer] 8:34:50 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  1 tests/e2e/autosave.spec.ts:6:1 › actual local IndexedDB autosave restores Korean front/back artwork after reload (8.9s)
+[WebServer] 8:34:54 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  2 tests/e2e/studio.spec.ts:89:1 › P0 반팔: PNG front/back editing, undo/redo, orbit, modes, project roundtrip, real transparent 2048 PNG (29.7s)
+[WebServer] 8:35:24 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[WebServer] 8:35:47 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  3 tests/e2e/studio.spec.ts:223:1 › P0 농구: front/back artwork and material survive save/open; GLB UV registration persists in library (32.7s)
+[WebServer] 8:35:57 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  4 tests/e2e/studio.spec.ts:310:1 › P0 malformed project, truncated GLB, and missing-UV GLB are rejected without losing the current project (6.6s)
+[WebServer] 8:36:03 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  5 tests/e2e/workspace.spec.ts:54:1 › command palette uses keyboard search, restores focus, and leaves native text editing and composition alone (3.5s)
+[WebServer] 8:36:07 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  6 tests/e2e/workspace.spec.ts:103:1 › clipboard preserves PNG assets across regions, undo/redo, Korean rename, and locked transforms (5.6s)
+[WebServer] 8:36:12 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  7 tests/e2e/workspace.spec.ts:142:1 › 2D precision commands, zoom, fit, grid and snapping work with actual pointer editing (6.8s)
+[WebServer] 8:36:19 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[WebServer] 8:36:28 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  8 tests/e2e/workspace.spec.ts:187:1 › desktop workspace fits 1366×768 and preserves resized or hidden panels after reload (14.3s)
+[WebServer] 8:36:34 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[WebServer] 8:36:42 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  9 tests/e2e/workspace.spec.ts:232:1 › file drop, history navigation, canvas pan and text scaling preserve real editable data (12.4s)
+
+  9 passed (2.0m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

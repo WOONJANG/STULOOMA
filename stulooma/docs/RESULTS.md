@@ -1,4 +1,39 @@
-# STULOOMA 0.1.0 실제 구현·검증 결과
+# STULOOMA 0.2.0 작업 공간 패치 검증
+
+전문 디자인 작업에 필요한 메뉴·명령 검색·독립 레이어 패널·작업 공간 조절·2D 탐색·정렬·저장 흐름을 구현했다. Adobe 프로그램의 그래픽·코드·고유 화면을 복제하지 않았다. 이번 패치는 상용 출시 인증이나 Windows 네이티브 검증 완료를 뜻하지 않는다.
+
+## 변경한 실제 동작
+
+- 파일/편집/디자인/보기/도움말 메뉴, Ctrl/⌘+K 검색, 우클릭 편집 메뉴를 같은 명령으로 연결.
+- 대비·글자·입력 크기를 조정한 graphite 작업 공간. 라이브러리/속성 너비와 표시 상태 및 3D/2D 보기 로컬 보관. 속성 스크롤과 레이어 목록을 분리.
+- 복사/붙여넣기로 원본 PNG와 텍스트를 다른 부위·프로젝트에 보존. 회전한 경계 기준 6방향 정렬, 0.1%/1% 이동, 이름 변경, 잠금 보호, 변경 없는 명령의 기록 제거.
+- 2D 확대·맞춤·팬·그리드·스냅·스마트 가이드·15° 회전. 가용 높이에 맞는 캔버스와 일정한 화면 크기의 핸들. 텍스트 모서리 확대 시 글자 크기도 확대.
+- 입력 초안 저장과 Undo 동기화, 세션 내 안전한 저장 위치 연결, 반복 저장/다른 이름 저장 취소 보존. 파일 드롭으로 PNG·GLB·프로젝트 가져오기.
+- .stulooma 버전 1과 기존 원본 에셋 보존. 새로운 문서 필수 필드나 의존성 없음.
+
+## 이번 버전 검증
+
+| 검사 | 결과 | 증거 |
+|---|---|---|
+| TypeScript | 통과 | [로그](evidence/typecheck-0.2.0.txt) |
+| 단위·보안 | 79 passed | [로그](evidence/unit-tests-0.2.0.txt) |
+| 실제 Chromium/WebGL | 9 passed | [로그](evidence/browser-tests-0.2.0.txt) |
+| 실제 Electron 네이티브 파일 흐름 | 3 passed | [로그](evidence/desktop-tests-0.2.0.txt) |
+| Linux 패키지 실제 실행 | 3 passed | [재검사 로그](evidence/packaged-desktop-tests-0.2.0-recheck.txt) |
+| Production 빌드 | 통과 | [로그](evidence/production-build-0.2.0.txt) |
+| Linux/Windows ZIP | CRC·실행 파일·고지·버전 0.2.0 검사, app.asar renderer/main/preload와 dist SHA-256 일치 | [기록](ARTIFACTS.json) |
+
+고유 자동 검사는 **91개: 79+9+3**이며 최종 실행에서 모두 통과했다. Linux 패키지 재실행은 같은 Electron 3개를 다른 실행 파일로 확인한 것이므로 중복 합산하지 않았다. 다른 검사들과 동시에 실행한 첫 Linux 패키지 검사는 3D 준비 5초 대기 제한으로 1개 실패했다([원본 로그](evidence/packaged-desktop-tests-0.2.0.txt)). 코드·검사 조건을 바꾸지 않고 패키지만 단독 재실행한 결과 3개 모두 통과했다.
+
+[작업 공간 화면](evidence/workspace-0.2.0.png) · [명령 검색 화면](evidence/command-search-0.2.0.png)
+
+확인하지 않은 항목: Windows 네이티브 GUI·실제 OS 한글 IME·macOS 빌드/실행·배포 서명. 다중 선택/그룹/flip, 의류 패턴 CAD와 물리 착의는 구현하지 않았다. [남은 기능과 제약](GAPS.md)을 유지한다.
+
+## 0.1.0 이전 검증 기록
+
+아래 기록과 해시는 이전 버전에 대한 결과이며 0.2.0의 결과를 대신하지 않는다.
+
+### STULOOMA 0.1.0 실제 구현·검증 결과
 
 검증일: 2026-10-18 (Asia/Seoul). P0 중심의 로컬 개발판을 구현했다. **Linux에서 동작하는 핵심 흐름을 검증했으며 Windows/macOS까지 검증한 상용 완성판으로 선언하지 않는다.**
 

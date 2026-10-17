@@ -1,0 +1,18 @@
+
+> stulooma@0.2.0 test
+> vitest run
+
+
+ RUN  v5.0.5 /workspace/STULOOMA/stulooma
+
+
+ Test Files  6 passed (6)
+      Tests  79 passed (79)
+   Start at  19:57:21
+   Duration  665ms (tests 59%, import 21%, transform 19%, worker 1%)
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

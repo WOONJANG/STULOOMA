@@ -1,0 +1,47 @@
+
+> stulooma@0.2.0 test:desktop
+> playwright test --config=playwright.electron.config.ts
+
+
+Running 3 tests using 1 worker
+
+(node:14268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/electron/desktop.spec.ts:13:1 › desktop uses a restricted bridge, opens and atomically saves native files (11.7s)
+  ✓  2 tests/electron/desktop.spec.ts:215:1 › a project passed at startup opens after the renderer is ready (5.9s)
+  ✘  3 tests/electron/desktop.spec.ts:235:1 › desktop UI shortcuts preserve document destinations and commit focused drafts (7.1s)
+
+
+  1) tests/electron/desktop.spec.ts:235:1 › desktop UI shortcuts preserve document destinations and commit focused drafts 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('viewer-state')
+    Expected: "ready"
+    Received: "loading"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('viewer-state') with timeout 5000ms
+      - waiting for getByTestId('viewer-state')
+
+
+      254 |     const saveButton = page.getByRole('button', { name: '프로젝트 저장 (Ctrl+S)' });
+      255 |     await expect(projectName).toHaveValue('서울 유니폼 — 김수현 23');
+    > 256 |     await expect(page.getByTestId('viewer-state')).toHaveAttribute('data-state', 'ready');
+          |                                                    ^
+      257 |     await application.evaluate(({ dialog }, selected) => {
+      258 |       const state = globalThis as typeof globalThis & { uiSaveDialogCount: number; uiSaveCanceled: boolean; uiSaveDestination: string };
+      259 |       state.uiSaveDialogCount = 0;
+        at /workspace/STULOOMA/stulooma/tests/electron/desktop.spec.ts:256:52
+
+    Error Context: test-results/electron/desktop-desktop-UI-shortcu-8d438-s-and-commit-focused-drafts/error-context.md
+
+  1 failed
+    tests/electron/desktop.spec.ts:235:1 › desktop UI shortcuts preserve document destinations and commit focused drafts 
+  2 passed (25.2s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

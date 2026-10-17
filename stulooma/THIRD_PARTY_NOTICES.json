@@ -6,7 +6,7 @@
   "scope": "Installed npm runtime dependency tree from npm ls --omit=dev --all --long --json, plus Electron binary license references. Metadata and collected root notice texts are an attribution record, not a legal compatibility assessment. Dev-only tooling and potentially embedded source-level notices require separate release review.",
   "application": {
     "name": "stulooma",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "license": "UNLICENSED"
   },
   "desktopRuntime": {
@@ -33,9 +33,9 @@
     "source": "docs/bundle-audit.json",
     "chunks": [
       {
-        "fileName": "assets/index-DBP_zjvB.js",
-        "sha256": "130c2edd643f00f18de3a63acc18c453fb6c988d5452b0551e1e756e82dd4788",
-        "bytes": 1337130
+        "fileName": "assets/index-Dt0Cowcr.js",
+        "sha256": "b6568c71112876a18bbcaeb9d9e5dcf21287ef20f0f37b8d311d46f48d75b341",
+        "bytes": 1377826
       }
     ]
   },
