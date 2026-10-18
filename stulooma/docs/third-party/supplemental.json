@@ -12,5 +12,29 @@
     "path": "docs/third-party/draco-1.5.9-LICENSE.txt",
     "url": "https://raw.githubusercontent.com/google/draco/1.5.9/LICENSE",
     "checkedOn": "2026-10-18"
+  },
+  {
+    "name": "polygon-clipping",
+    "version": "0.15.7",
+    "path": "docs/third-party/splaytree-3.1.2-LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/w8r/splay-tree/v3.1.2/Readme.md",
+    "checkedOn": "2026-10-18",
+    "note": "Splaytree 3.1.2 embedded in polygon-clipping browser UMD"
+  },
+  {
+    "name": "splaytree",
+    "version": "3.2.3",
+    "path": "docs/third-party/splaytree-3.2.3-LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/w8r/splay-tree/v3.2.3/Readme.md",
+    "checkedOn": "2026-10-18",
+    "note": "Splaytree 3.2.3 installed npm dependency; renderer uses embedded 3.1.2"
+  },
+  {
+    "name": "polygon-clipping",
+    "version": "0.15.7",
+    "path": "docs/third-party/typescript-helper-Apache-2.0.txt",
+    "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "checkedOn": "2026-10-18",
+    "note": "Microsoft TypeScript helper header preserved in polygon-clipping UMD"
   }
 ]

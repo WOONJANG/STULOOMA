@@ -12,6 +12,7 @@ module.exports = {
       /^\/src(?:\/|$)/, /^\/electron(?:\/|$)/, /^\/tests(?:\/|$)/, /^\/scripts(?:\/|$)/,
       /^\/docs(?:\/|$)/, /^\/\.git(?:\/|$)/, /^\/out(?:\/|$)/, /^\/test-results(?:\/|$)/,
       /^\/playwright-report(?:\/|$)/, /^\/node_modules(?:\/|$)/,
+      /^\/public(?:\/|$)/,
       /^\/(?:tsconfig.*\.json|vite\.config\.ts|playwright.*\.ts|package-lock\.json)$/,
     ],
     extendInfo: {

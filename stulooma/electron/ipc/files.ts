@@ -4,7 +4,7 @@ import path from 'node:path';
 import { dialog, ipcMain, type BrowserWindow, type IpcMainInvokeEvent, type WebContents } from 'electron';
 import { channels, EXPORT_MAX_BYTES, PROJECT_MAX_BYTES, type ExportKind, type SaveFileRequest, type SaveProjectRequest } from './channels';
 
-const extensions: Record<ExportKind, string> = { project: 'stulooma', png: 'png', jpg: 'jpg', glb: 'glb' };
+const extensions: Record<ExportKind, string> = { project: 'stulooma', png: 'png', jpg: 'jpg', glb: 'glb', svg: 'svg' };
 
 function validateSaveRequest(request: unknown): SaveFileRequest {
   if (!request || typeof request !== 'object') throw new Error('Invalid save request');
@@ -163,7 +163,7 @@ export function registerFileHandlers(options: {
     dialogBusy = true;
     try {
       const extension = extensions[request.kind];
-      const name = request.name.replace(/\.(stulooma|png|jpe?g|glb)$/i, '');
+      const name = request.name.replace(/\.(stulooma|png|jpe?g|glb|svg)$/i, '');
       const result = await dialog.showSaveDialog(window, {
         title: request.kind === 'project' ? 'STULOOMA 프로젝트 저장' : '파일 내보내기',
         defaultPath: `${name}.${extension}`,

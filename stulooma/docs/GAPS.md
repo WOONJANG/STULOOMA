@@ -1,6 +1,6 @@
 # 미구현·제약·추가 검증
 
-STULOOMA 0.2.0 · 2026-10-18. 작동하는 핵심 편집 흐름을 유지하며 아래 항목을 실제 구현·검증 전 완료로 표시하지 않는다. P0 전체 완료 여부는 [SPEC.md](SPEC.md)와 [TEST_PLAN.md](TEST_PLAN.md)의 실제 인수 결과에 따른다.
+STULOOMA 0.3.0 · 2026-10-18. 작동하는 핵심 편집 흐름을 유지하며 아래 항목을 실제 구현·검증 전 완료로 표시하지 않는다. P0 전체 완료 여부는 [SPEC.md](SPEC.md)와 [TEST_PLAN.md](TEST_PLAN.md)의 실제 인수 결과에 따른다.
 
 | 기능 | 현재 상태 / 이유 | 필요한 기술·작업 | 우선순위 | 현재 대안 |
 |---|---|---|---|---|
@@ -15,9 +15,9 @@ STULOOMA 0.2.0 · 2026-10-18. 작동하는 핵심 편집 흐름을 유지하며 
 | 모든 UI/IME 조합 | 자동 한국어 문자열·단축키 가드 검사 가능; 실제 OS IME 미검증 | Windows/macOS 한글 IME 실제 조합·Undo 검사 | P0 검증 | UTF-8 저장·composition 가드 유지 |
 | 전체 상용 출시 요건 | unsigned 개발판; 배포 정책·대상 OS 출시 검증 필요 | [LICENSES.md](LICENSES.md) 변경 시 재검토·자체 배포권·서명·대상OS QA | 출시 필수 | 개발용 소스·테스트·ZIP 제공 |
 | 후드/긴팔/축구/야구/하키 모델 | 실제 기본 모델은 반팔·농구 상의 2종 | 독립 모델·부위·UV·재질·품질/복원 테스트 | P1 | 사용자 권리 있는 GLB 등록 |
-| 고급 텍스트·마킹 | 기본 한글/영문 text 레이어; 선수명/번호 전용 객체·자간·아치·외곽선 미구현 | typography 데이터·레이아웃·프리셋·폰트 검사 | P1 | 일반 텍스트 레이어로 배치 |
-| SVG/JPG/WEBP 가져오기 | PNG만; SVG 안전 subset 처리기 없음 | MIME/header 검사·SVG sanitization·rasterization | P1 | 외부 도구에서 투명 PNG로 변환 |
-| 다중 선택·그룹·flip | 0.2.0에서 단일 레이어 앱 내 복사/붙여넣기·6방향 정렬·스냅 구현; 다중 선택·group·flip 없음 | 다중 선택 계약·명령 묶음·변환/마스크 보존 | P1 | 단일 레이어 선택·복사·정렬과 수치 편집 |
+| 고급 텍스트·마킹 | 기본 text와 Vector Studio 자간·실제 Regular 400 윤곽선 지원; 선수명/번호 전용 객체·아치 미구현 | typography 데이터·레이아웃·프리셋·폰트 검사 | P1 | 일반 텍스트 레이어로 배치 |
+| SVG 전체/JPG/WEBP 가져오기 | Vector Studio에서 안전 SVG subset과 PNG 편집 지원; JPG/WEBP 미지원 | [벡터 제약](VECTOR_GAPS.md)의 SVG 범위 확장·추가 이미지 형식 검증 | P1 | 지원 SVG 또는 PNG 사용 |
+| 의류 레이어 다중 선택·그룹·flip | 0.2.0에서 단일 레이어 앱 내 복사/붙여넣기·6방향 정렬·스냅 구현; 의류 레이어의 다중 선택·group·flip 없음; Vector Studio 내부 다중 선택·group·반전 지원 | 다중 선택 계약·명령 묶음·변환/마스크 보존 | P1 | 단일 레이어 선택·복사·정렬과 수치 편집 |
 | 반복 패턴·전체 프린트 | 시험용 패턴 PNG는 있음; repeat/경계 연속 UI 없음 | tiling layer·phase·마스크·부위 경계 정합 | P1 | 반복 이미지를 PNG로 제작해 부위 배치 |
 | 고급 원단·normal map | 색상·roughness·metalness와 기본 표현 프리셋 | 원단 자산 권리 확인·normal/bump·repeat·저장 | P1 | PBR 수치 조정; 실제 원단 물성 아님 |
 | 디자인 비교·변형 | 프로젝트별 한 디자인; 홈/원정 동시 비교 없음 | variant model·diff·비교 렌더 | P1 | 별도 `.stulooma` 저장 |

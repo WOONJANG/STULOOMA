@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><defs><clipPath id="window"><circle cx="200" cy="150" r="95"/></clipPath></defs><g clip-path="url(#window)"><rect width="400" height="300" fill="#e6b34c"/><path d="M0 0L400 300 M0 60L320 300 M80 0L400 240" fill="none" stroke="#275d50" stroke-width="45"/></g></svg>

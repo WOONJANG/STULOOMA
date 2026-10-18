@@ -1,12 +1,27 @@
 import { useEffect, useState } from "react";
 
-export function TextField({ value, disabled, onCommit }: {
-  value: string; disabled?: boolean; onCommit: (value: string) => void;
+export function TextField({
+  value,
+  disabled,
+  onCommit,
+  label = "텍스트 내용",
+}: {
+  value: string;
+  disabled?: boolean;
+  onCommit: (value: string) => void;
+  label?: string;
 }) {
   const [draft, setDraft] = useState(value);
   useEffect(() => setDraft(value), [value]);
-  return <textarea aria-label="텍스트 내용" disabled={disabled} value={draft}
-    onChange={event => setDraft(event.target.value)} onBlur={() => onCommit(draft)}/>;
+  return (
+    <textarea
+      aria-label={label}
+      disabled={disabled}
+      value={draft}
+      onChange={(event) => setDraft(event.target.value)}
+      onBlur={() => onCommit(draft)}
+    />
+  );
 }
 
 /** Keep incomplete numeric input local until committed, so typing a decimal or minus is possible. */

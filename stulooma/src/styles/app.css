@@ -326,20 +326,34 @@ small {
 }
 .workspace {
   display: grid;
-  grid-template-columns: var(--library-width, 216px) var(
-      --library-grip,
-      6px
-    ) minmax(0, 1fr) var(--inspector-grip, 6px) var(--inspector-width, 296px);
+  grid-template-columns:
+    var(--library-width, 216px) var(--library-grip, 6px)
+    minmax(0, 1fr) var(--inspector-grip, 6px) var(--inspector-width, 296px);
   flex: 1;
   min-height: 0;
   min-width: 0;
   overflow: hidden;
 }
-.workspace > .library { grid-column: 1; grid-row: 1; }
-.workspace > .panel-resizer[aria-label="라이브러리 너비"] { grid-column: 2; grid-row: 1; }
-.workspace > .center-workspace { grid-column: 3; grid-row: 1; }
-.workspace > .panel-resizer[aria-label="속성 패널 너비"] { grid-column: 4; grid-row: 1; }
-.workspace > .properties { grid-column: 5; grid-row: 1; }
+.workspace > .library {
+  grid-column: 1;
+  grid-row: 1;
+}
+.workspace > .panel-resizer[aria-label="라이브러리 너비"] {
+  grid-column: 2;
+  grid-row: 1;
+}
+.workspace > .center-workspace {
+  grid-column: 3;
+  grid-row: 1;
+}
+.workspace > .panel-resizer[aria-label="속성 패널 너비"] {
+  grid-column: 4;
+  grid-row: 1;
+}
+.workspace > .properties {
+  grid-column: 5;
+  grid-row: 1;
+}
 .panel {
   background: var(--panel);
   display: flex;
@@ -906,10 +920,24 @@ small {
   background: #222b35;
   scrollbar-width: thin;
 }
-.layers-dock .layers-section { padding-top: 0; border-bottom: 0; }
-.layers-dock h2 { position: sticky; top: 0; z-index: 1; padding: 12px 0 9px; margin: 0; background: #222b35; }
-.layers-dock .empty-layers { padding: 10px 3px; }
-.layers-dock .empty-layers > span { display: none; }
+.layers-dock .layers-section {
+  padding-top: 0;
+  border-bottom: 0;
+}
+.layers-dock h2 {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 12px 0 9px;
+  margin: 0;
+  background: #222b35;
+}
+.layers-dock .empty-layers {
+  padding: 10px 3px;
+}
+.layers-dock .empty-layers > span {
+  display: none;
+}
 .property-section {
   padding: 14px;
   border-bottom: 1px solid #404650;
@@ -1915,5 +1943,53 @@ small {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Vector Studio reuses the existing garment viewer and document command shell. */
+.artboards.vector {
+  gap: 10px;
+  padding-bottom: 0;
+}
+.artboards.vector > .stage-panel {
+  flex: 0 0 31%;
+}
+.vector-edit-binding {
+  width: 100%;
+  padding: 8px;
+  color: #caeee1;
+  border: 1px solid #5f8a7e;
+  border-radius: 4px;
+  background: #2e4b43;
+  margin-bottom: 10px;
+}
+@media (max-width: 1400px) and (min-width: 761px) {
+  .artboards.vector > .stage-panel {
+    flex-basis: 27%;
+  }
+}
+@media (max-width: 1100px) and (min-width: 761px) {
+  .artboards.vector > .stage-panel {
+    flex-basis: 24%;
+  }
+  .artboards.vector .camera-bar button {
+    font-size: 10px;
+    padding: 5px;
+  }
+  .artboards.vector .orbit-hint {
+    font-size: 9px;
+  }
+}
+@media (max-width: 760px) {
+  .artboards.vector {
+    flex-direction: column;
+  }
+  .artboards.vector > .stage-panel {
+    flex: 0 0 270px;
+    min-height: 270px;
+  }
+  .center-workspace:has(.artboards.vector) {
+    height: 1150px;
+    flex-basis: 1150px;
   }
 }

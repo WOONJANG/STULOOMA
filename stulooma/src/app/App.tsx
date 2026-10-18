@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   ArrowDown,
   ArrowUp,
@@ -63,8 +69,12 @@ import {
 } from "../components/commands";
 import { DesignCanvas } from "../features/design-editor/DesignCanvas";
 import { Viewer, type ViewerHandle } from "../features/viewport/Viewer";
+import {
+  VectorStudio,
+  type VectorStudioHandle,
+} from "../features/vector-studio/VectorStudio";
 
-type SaveKind = "project" | "png" | "jpg" | "glb";
+type SaveKind = "project" | "png" | "jpg" | "glb" | "svg";
 declare global {
   interface Window {
     stulooma?: {
@@ -153,12 +163,17 @@ function Modal({
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement;
-    const first = box.current?.querySelector<HTMLElement>('input,textarea,select')
-      ?? box.current?.querySelector<HTMLElement>('button');
+    const first =
+      box.current?.querySelector<HTMLElement>("input,textarea,select") ??
+      box.current?.querySelector<HTMLElement>("button");
     if (!box.current?.contains(document.activeElement)) first?.focus();
     const handler = (e: KeyboardEvent) => {
       if (e.isComposing || e.keyCode === 229) return;
-      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        close();
+      }
       if (e.key === "Tab") {
         const controls = Array.from(
           box.current?.querySelectorAll<HTMLElement>(
@@ -245,7 +260,35 @@ export default function App() {
     modelInput = useRef<HTMLInputElement>(null);
   const workspace = useWorkspace();
   const { view, splitRatio } = workspace;
-  const setView = (view: "split" | "3d" | "2d") => workspace.update({ view });
+  const setView = (view: "split" | "3d" | "2d" | "vector") =>
+    workspace.update({ view });
+  const vectorStudio = useRef<VectorStudioHandle>(null);
+  const [vectorSelection, setVectorSelection] = useState({
+    count: 0,
+    canPaste: false,
+  });
+  const [queuedSVG, setQueuedSVG] = useState<{
+    source: string;
+    name: string;
+  } | null>(null);
+  const vectorActive = view === "vector";
+  const vectorWorkspaceRef = useRef(vectorActive);
+  vectorWorkspaceRef.current = vectorActive;
+  const reportVectorSelection = useCallback(
+    (count: number, canPaste: boolean) =>
+      setVectorSelection((previous) =>
+        previous.count === count && previous.canPaste === canPaste
+          ? previous
+          : { count, canPaste },
+      ),
+    [],
+  );
+  useEffect(() => {
+    if (vectorActive && queuedSVG && vectorStudio.current) {
+      vectorStudio.current.importSVG(queuedSVG.source, queuedSVG.name);
+      setQueuedSVG(null);
+    }
+  }, [vectorActive, queuedSVG]);
   const setSplitRatio = (update: number | ((value: number) => number)) =>
     workspace.update({
       splitRatio: typeof update === "function" ? update(splitRatio) : update,
@@ -327,6 +370,10 @@ export default function App() {
   }, [project, s.dirty]);
   useEffect(() => {
     const before = (e: BeforeUnloadEvent) => {
+      // Commit a focused inspector draft before deciding whether closing can
+      // discard changes. A saved document can still have unblurred text.
+      const focused = document.activeElement;
+      if (focused instanceof HTMLInputElement || focused instanceof HTMLTextAreaElement) focused.blur();
       if (useStudio.getState().dirty) {
         e.preventDefault();
         e.returnValue = "";
@@ -363,7 +410,9 @@ export default function App() {
           ? "application/zip"
           : kind === "glb"
             ? "model/gltf-binary"
-            : `image/${kind === "jpg" ? "jpeg" : "png"}`,
+            : kind === "svg"
+              ? "image/svg+xml"
+              : `image/${kind === "jpg" ? "jpeg" : "png"}`,
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -377,7 +426,11 @@ export default function App() {
     // Commit inspector drafts before capturing a revision, including calls
     // from menus or an external command instead of a mouse click.
     const focused = document.activeElement;
-    if (focused instanceof HTMLInputElement || focused instanceof HTMLTextAreaElement) focused.blur();
+    if (
+      focused instanceof HTMLInputElement ||
+      focused instanceof HTMLTextAreaElement
+    )
+      focused.blur();
     await task("프로젝트 저장 중", async () => {
       const p = useStudio.getState().project;
       const data = await saveProject(p);
@@ -648,7 +701,7 @@ export default function App() {
       label: "복사",
       group: "편집",
       shortcut: "Ctrl+C",
-      disabled: !selected,
+      disabled: vectorActive ? !vectorSelection.count : !selected,
       keywords: "copy",
     },
     {
@@ -656,7 +709,7 @@ export default function App() {
       label: "붙여넣기",
       group: "편집",
       shortcut: "Ctrl+V",
-      disabled: !s.canPaste,
+      disabled: vectorActive ? !vectorSelection.canPaste : !s.canPaste,
       keywords: "paste",
     },
     {
@@ -664,21 +717,23 @@ export default function App() {
       label: "복제",
       group: "편집",
       shortcut: "Ctrl+D",
-      disabled: !selected,
+      disabled: vectorActive ? !vectorSelection.count : !selected,
     },
     {
       id: "edit.rename",
       label: "레이어 이름 바꾸기",
       group: "편집",
       shortcut: "F2",
-      disabled: !selected,
+      disabled: vectorActive ? !vectorSelection.count : !selected,
     },
     {
       id: "edit.delete",
       label: "삭제",
       group: "편집",
       shortcut: "Delete",
-      disabled: !selected || selected.locked,
+      disabled: vectorActive
+        ? !vectorSelection.count
+        : !selected || selected.locked,
     },
     {
       id: "artwork.import",
@@ -711,7 +766,9 @@ export default function App() {
       id: `align.${alignment}`,
       label: name,
       group: "디자인",
-      disabled: !selected || selected.locked,
+      disabled: vectorActive
+        ? !vectorSelection.count
+        : !selected || selected.locked,
       keywords: "align 정렬",
     })),
     {
@@ -732,6 +789,79 @@ export default function App() {
       group: "보기",
       checked: view === "2d",
     },
+    {
+      id: "workspace.vector",
+      label: "Vector Studio",
+      group: "보기",
+      checked: vectorActive,
+      keywords: "벡터 펜 패스 SVG 로고",
+    },
+    ...(vectorActive
+      ? [
+          {
+            id: "vector.import.svg",
+            label: "SVG 가져오기",
+            group: "파일",
+            keywords: "벡터 import",
+          },
+          {
+            id: "vector.export.svg",
+            label: "벡터 SVG 내보내기",
+            group: "파일",
+            keywords: "vector export",
+          },
+          {
+            id: "vector.export.png",
+            label: "벡터 PNG 내보내기",
+            group: "파일",
+          },
+          {
+            id: "edit.selectAll",
+            label: "벡터 전체 선택",
+            group: "선택",
+            shortcut: "Ctrl+A",
+          },
+          {
+            id: "edit.group",
+            label: "그룹",
+            group: "개체",
+            shortcut: "Ctrl+G",
+            disabled: vectorSelection.count < 2,
+          },
+          {
+            id: "edit.ungroup",
+            label: "그룹 해제",
+            group: "개체",
+            shortcut: "Ctrl+Shift+G",
+            disabled: !vectorSelection.count,
+          },
+          ...(["union", "difference", "intersection", "xor"] as const).map(
+            (operation, index) => ({
+              id: `vector.boolean.${operation}`,
+              label: ["합치기", "앞면 빼기", "교차 영역", "겹침 제외"][index],
+              group: "경로",
+              disabled: vectorSelection.count < 2,
+            }),
+          ),
+          {
+            id: "vector.compound.create",
+            label: "복합 패스 만들기",
+            group: "경로",
+            disabled: vectorSelection.count < 2,
+          },
+          {
+            id: "vector.compound.release",
+            label: "복합 패스 해제",
+            group: "경로",
+            disabled: !vectorSelection.count,
+          },
+          {
+            id: "vector.garment.bind",
+            label: "현재 부위에 벡터 적용",
+            group: "3D 적용",
+          },
+        ]
+      : []),
     {
       id: "workspace.library",
       label: "라이브러리 표시",
@@ -788,6 +918,15 @@ export default function App() {
     if (busyRef.current || commands.find((item) => item.id === id)?.disabled)
       return;
     setContextMenu(null);
+    if (
+      vectorActive &&
+      (id.startsWith("vector.") ||
+        (id.startsWith("edit.") && !["edit.undo", "edit.redo"].includes(id)) ||
+        id.startsWith("align."))
+    ) {
+      vectorStudio.current?.command(id);
+      return;
+    }
     switch (id) {
       case "project.new":
         if (confirmReplace()) {
@@ -824,9 +963,17 @@ export default function App() {
         }
         break;
       case "artwork.import":
+        if (vectorActive) {
+          vectorStudio.current?.command("vector.import.image");
+          break;
+        }
         pngInput.current?.click();
         break;
       case "artwork.addText":
+        if (vectorActive) {
+          vectorStudio.current?.command("vector.text.create");
+          break;
+        }
         addText();
         setInspectorTab("properties");
         break;
@@ -856,7 +1003,8 @@ export default function App() {
       case "workspace.split":
       case "workspace.3d":
       case "workspace.2d":
-        setView(id.slice(10) as "split" | "3d" | "2d");
+      case "workspace.vector":
+        setView(id.slice(10) as "split" | "3d" | "2d" | "vector");
         break;
       case "workspace.library":
         workspace.update({ libraryVisible: !workspace.libraryVisible });
@@ -952,6 +1100,7 @@ export default function App() {
       else if (key === "f") id = "view.perspective";
       else if (
         event.key.startsWith("Arrow") &&
+        !vectorWorkspaceRef.current &&
         !target.closest('[role="separator"], [role="tablist"]')
       ) {
         const state = useStudio.getState(),
@@ -978,7 +1127,7 @@ export default function App() {
       }
       if (id) {
         event.preventDefault();
-        if (input && id !== 'help.commands') target.blur();
+        if (input && id !== "help.commands") target.blur();
         commandRef.current(id);
       }
     };
@@ -1038,7 +1187,19 @@ export default function App() {
         const file = files[0];
         if (/\.png$/i.test(file.name)) void addPNG(file);
         else if (/\.glb$/i.test(file.name)) void importModel(file);
-        else if (/\.stulooma$/i.test(file.name))
+        else if (/\.svg$/i.test(file.name)) {
+          if (file.size > 12 * 1024 * 1024) {
+            setError("SVG는 12 MB 이하로 선택하세요.");
+            return;
+          }
+          void file
+            .text()
+            .then((source) => {
+              setView("vector");
+              setQueuedSVG({ source, name: file.name });
+            })
+            .catch(() => setError("SVG 파일을 읽을 수 없습니다."));
+        } else if (/\.stulooma$/i.test(file.name))
           void task("프로젝트 확인 중", async () => {
             if (file.size > 64 * 1024 * 1024)
               throw new Error("프로젝트는 64 MB 이하로 선택하세요.");
@@ -1091,7 +1252,7 @@ export default function App() {
           <button onClick={() => setHelpOpen(true)}>
             사용 가이드 <span>↗</span>
           </button>
-          <span className="version">v0.2</span>
+          <span className="version">v0.3</span>
         </div>
       </header>
       <nav className="toolbar" aria-label="주요 명령">
@@ -1190,21 +1351,25 @@ export default function App() {
         className="workspace"
         style={
           {
-            "--library-width": workspace.libraryVisible
-              ? `${workspace.libraryWidth}px`
-              : "0px",
-            "--inspector-width": workspace.inspectorVisible
-              ? `${workspace.inspectorWidth}px`
-              : "0px",
-            "--library-grip": workspace.libraryVisible ? "6px" : "0px",
-            "--inspector-grip": workspace.inspectorVisible ? "6px" : "0px",
+            "--library-width":
+              !vectorActive && workspace.libraryVisible
+                ? `${workspace.libraryWidth}px`
+                : "0px",
+            "--inspector-width":
+              !vectorActive && workspace.inspectorVisible
+                ? `${workspace.inspectorWidth}px`
+                : "0px",
+            "--library-grip":
+              !vectorActive && workspace.libraryVisible ? "6px" : "0px",
+            "--inspector-grip":
+              !vectorActive && workspace.inspectorVisible ? "6px" : "0px",
           } as React.CSSProperties
         }
       >
         <aside
           className="library panel"
           aria-label="라이브러리"
-          hidden={!workspace.libraryVisible}
+          hidden={vectorActive || !workspace.libraryVisible}
         >
           <div className="panel-heading">
             <span>라이브러리</span>
@@ -1320,7 +1485,7 @@ export default function App() {
           min={176}
           max={320}
           reset={216}
-          hidden={!workspace.libraryVisible}
+          hidden={vectorActive || !workspace.libraryVisible}
           onChange={(libraryWidth) => workspace.update({ libraryWidth })}
         />
         <section className="center-workspace">
@@ -1333,7 +1498,7 @@ export default function App() {
               <h1>{project.garment.name}</h1>
             </div>
             <div className="view-switch" aria-label="보기 모드">
-              {(["3d", "split", "2d"] as const).map((mode) => (
+              {(["3d", "split", "2d", "vector"] as const).map((mode) => (
                 <button
                   key={mode}
                   className={view === mode ? "active" : ""}
@@ -1344,7 +1509,9 @@ export default function App() {
                     ? "분할 보기"
                     : mode === "3d"
                       ? "3D 목업"
-                      : "2D 디자인"}
+                      : mode === "vector"
+                        ? "Vector Studio"
+                        : "2D 디자인"}
                 </button>
               ))}
             </div>
@@ -1454,11 +1621,16 @@ export default function App() {
             <section
               className="editor-panel"
               onContextMenu={(event) => {
-                if ((event.target as HTMLElement).closest('input,textarea,select')) return;
+                if (
+                  (event.target as HTMLElement).closest("input,textarea,select")
+                )
+                  return;
                 event.preventDefault();
                 setContextMenu({ x: event.clientX, y: event.clientY });
               }}
-              style={view === "3d" ? { display: "none" } : undefined}
+              style={
+                view === "3d" || vectorActive ? { display: "none" } : undefined
+              }
             >
               <div className="artboard-label">
                 <Layers size={13} />
@@ -1499,6 +1671,25 @@ export default function App() {
                 PNG 이미지 추가
               </button>
             </section>
+            {vectorActive && (
+              <VectorStudio
+                ref={vectorStudio}
+                onSelectionChange={reportVectorSelection}
+                onError={setError}
+                onNotice={announce}
+                onExport={async (kind, data, name) => {
+                  let saved = false;
+                  await task("벡터 파일 내보내기", async () => {
+                    saved = await writeFile(
+                      `${name.replace(/\.(svg|png)$/i, "")}.${kind}`,
+                      data,
+                      kind,
+                    );
+                  });
+                  return saved;
+                }}
+              />
+            )}
           </div>
           <div className="work-context">
             <span>
@@ -1518,13 +1709,13 @@ export default function App() {
           max={400}
           reset={296}
           direction={-1}
-          hidden={!workspace.inspectorVisible}
+          hidden={vectorActive || !workspace.inspectorVisible}
           onChange={(inspectorWidth) => workspace.update({ inspectorWidth })}
         />
         <aside
           className="properties panel"
           aria-label="속성 및 레이어"
-          hidden={!workspace.inspectorVisible}
+          hidden={vectorActive || !workspace.inspectorVisible}
         >
           <div className="panel-heading">
             <span>속성</span>
@@ -1593,8 +1784,22 @@ export default function App() {
               <section className="property-section">
                 <h2>
                   디자인 조절
-                  <span>{selected.type === "text" ? "TEXT" : "IMAGE"}</span>
+                  <span>
+                    {selected.type === "text"
+                      ? "TEXT"
+                      : selected.type === "vector"
+                        ? "VECTOR"
+                        : "IMAGE"}
+                  </span>
                 </h2>
+                {selected.type === "vector" && (
+                  <button
+                    className="vector-edit-binding"
+                    onClick={() => command("workspace.vector")}
+                  >
+                    Vector Studio에서 원본 편집
+                  </button>
+                )}
                 {selected.type === "text" && (
                   <>
                     <label className="field-label">
@@ -1602,7 +1807,7 @@ export default function App() {
                       <TextField
                         disabled={selected.locked}
                         key={selected.id}
-                        value={selected.text ?? ''}
+                        value={selected.text ?? ""}
                         onCommit={(text) => patchLayer({ text })}
                       />
                     </label>
@@ -1854,7 +2059,11 @@ export default function App() {
               )}
             </section>
           </div>
-          <div className="layers-dock" hidden={inspectorTab !== "properties"} aria-label="레이어 패널">
+          <div
+            className="layers-dock"
+            hidden={inspectorTab !== "properties"}
+            aria-label="레이어 패널"
+          >
             <section className="property-section layers-section">
               <h2>
                 레이어
@@ -2048,7 +2257,7 @@ export default function App() {
         <span>{autoStatus}</span>
         <span className="status-command">{s.lastCommand}</span>
         <span>UV {project.settings.textureSize}px</span>
-        <span>STULOOMA · 0.2.0</span>
+        <span>STULOOMA · 0.3.0</span>
       </footer>
       <input
         hidden
@@ -2112,7 +2321,7 @@ export default function App() {
       )}
       {paletteOpen && (
         <CommandPalette
-          commands={commands.filter(item => item.id !== 'help.commands')}
+          commands={commands.filter((item) => item.id !== "help.commands")}
           onCommand={command}
           close={() => setPaletteOpen(false)}
         />

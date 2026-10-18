@@ -1,14 +1,15 @@
-# STULOOMA 0.2.0 개발판 배포
+# STULOOMA 0.3.0 개발판 배포
 
-[0.2.0 릴리스](https://github.com/WOONJANG/STULOOMA/releases/tag/v0.2.0-dev)의 본문에서 Windows 실행 ZIP·소스 ZIP·SHA256SUMS를 받을 수 있다. ZIP 전체를 풀고 `STULOOMA-win32-x64/STULOOMA.exe`를 실행한다. 이전 버전과 다른 폴더에 풀어 사용한다. 기존 `.stulooma` 프로젝트를 열 수 있다.
+[0.3.0 릴리스](https://github.com/WOONJANG/STULOOMA/releases/tag/v0.3.0-dev)의 본문에서 Windows 실행 ZIP·소스 ZIP·SHA256SUMS를 받을 수 있다. ZIP 전체를 풀고 `STULOOMA-win32-x64/STULOOMA.exe`를 실행한다. 이전 버전과 다른 폴더에 풀어 사용한다. 기존 `.stulooma` 프로젝트를 열 수 있다.
 
-- Windows 직접 링크: https://media.githubusercontent.com/media/WOONJANG/STULOOMA/downloads-v0.2.0-dev/STULOOMA-Windows-0.2.0.zip
-- 소스 직접 링크: https://raw.githubusercontent.com/WOONJANG/STULOOMA/downloads-v0.2.0-dev/STULOOMA-source-0.2.0.zip
-- 무결성: https://raw.githubusercontent.com/WOONJANG/STULOOMA/downloads-v0.2.0-dev/SHA256SUMS.txt
+- Windows 직접 링크: https://media.githubusercontent.com/media/WOONJANG/STULOOMA/downloads-v0.3.0-dev/STULOOMA-Windows-0.3.0.zip
+- Linux 직접 링크: https://media.githubusercontent.com/media/WOONJANG/STULOOMA/downloads-v0.3.0-dev/STULOOMA-Linux-0.3.0.zip
+- 소스 직접 링크: https://raw.githubusercontent.com/WOONJANG/STULOOMA/downloads-v0.3.0-dev/STULOOMA-source-0.3.0.zip
+- 무결성: https://raw.githubusercontent.com/WOONJANG/STULOOMA/downloads-v0.3.0-dev/SHA256SUMS.txt
 
-GitHub 릴리스 본문에 실제 다운로드 링크를 제공한다. Windows 실행 ZIP은 Git LFS의 공개 다운로드 호스트에서 제공하며 Git의 작은 LFS 포인터 파일을 실행 ZIP으로 제시하지 않는다. 소스는 일반 Git blob이다. 게시 전 로그인 없는 전체 다운로드와 SHA-256 일치를 검사한다.
+GitHub 릴리스 본문에 실제 다운로드 링크를 제공한다. Windows/Linux 실행 ZIP은 Git LFS의 공개 다운로드 호스트에서 제공하며 Git의 작은 LFS 포인터 파일을 실행 ZIP으로 제시하지 않는다. 소스는 일반 Git blob이다. 게시 전 로그인 없는 전체 다운로드와 SHA-256 일치를 검사한다.
 
-서명되지 않은 개발판이다. Linux에서 실제 Electron 실행을 검증하며 Windows ZIP 제작·내용 검증과 Windows 네이티브 실행은 구분한다. macOS 앱은 제공하지 않는다. 새 결과는 [RESULTS.md](RESULTS.md), 패키지 크기와 해시는 [ARTIFACTS.json](ARTIFACTS.json), 남은 사항은 [GAPS.md](GAPS.md)를 따른다.
+서명되지 않은 개발판이다. Linux에서 실제 Electron 실행을 검증하며 Windows ZIP 제작·내용 검증과 Windows 네이티브 실행은 구분한다. macOS 앱은 제공하지 않는다. 새 결과는 [VECTOR_RESULTS.md](VECTOR_RESULTS.md), 패키지 크기와 해시는 [ARTIFACTS.json](ARTIFACTS.json), 남은 사항은 [GAPS.md](GAPS.md)를 따른다.
 
 소스 ZIP은 `python3 scripts/package-source.py`로 현재 Git 추적 파일과 무시되지 않은 새 소스를 묶는다. `.git`, 설치 의존성, 빌드 결과, 로컬 설정·캐시를 제외하고 ZIP CRC를 검사한다.
 
@@ -24,7 +25,7 @@ Requires Node.js 24 LTS, npm, and an operating system supported by the pinned El
 
 `npm run dev:desktop` bundles the Electron main process and sandboxed preload, starts Vite on `127.0.0.1:5173`, waits for it, then opens the desktop application. Main/preload changes require restarting this command. `npm run dev` runs the browser development experience. For the packaged renderer locally, run `npm run build` then `npx electron .`.
 
-The renderer has no Node integration. Only opening a `.stulooma` project and saving project/PNG/JPEG/GLB bytes are exposed through the preload bridge. File paths stay in the main process; dialogs require a trusted top-level renderer. Projects are limited to 64 MiB; other exports to 128 MiB. Saving writes and syncs a private temporary file beside the destination before an atomic rename. The app blocks outbound network, new windows, navigation, webviews, downloads, and permission requests. Development allows only its local Vite origin.
+The renderer has no Node integration. Only opening a `.stulooma` project and saving project/PNG/JPEG/GLB/SVG bytes are exposed through the preload bridge. File paths stay in the main process; dialogs require a trusted top-level renderer. Projects are limited to 64 MiB; other exports to 128 MiB. Saving writes and syncs a private temporary file beside the destination before an atomic rename. The app blocks outbound network, new windows, navigation, webviews, downloads, and permission requests. Development allows only its local Vite origin.
 
 ## Verify
 
@@ -47,4 +48,4 @@ Portable ZIP extraction does not register a Windows/Linux file association. User
 
 ## 이번 산출물 검증
 
-최종 Linux 패키지 자체에서 Electron 시험2개가 통과했다. Windows 실행 파일은 생성·PE 형식·ZIP CRC·현재 번들/고지 일치만 검증했다. 두 ZIP의 실제 크기와 SHA-256은 [ARTIFACTS.json](ARTIFACTS.json), 상세 결과는 [RESULTS.md](RESULTS.md)를 따른다. 배포되는 코드와 Electron main/preload를 현재 `dist`와 바이트 해시로 대조했고, renderer에 포함된16종 라이브러리/글꼴 고지를 보존했다.
+최종 Linux 패키지 자체의 Electron 검사 결과는 [VECTOR_RESULTS.md](VECTOR_RESULTS.md)에 기록한다. Windows 실행 파일은 생성·PE 형식·ZIP CRC·현재 번들/고지 일치만 검증했다. 두 ZIP의 실제 크기와 SHA-256은 [ARTIFACTS.json](ARTIFACTS.json), 상세 결과는 [VECTOR_RESULTS.md](VECTOR_RESULTS.md)를 따른다. 배포되는 코드와 Electron main/preload를 현재 `dist`와 바이트 해시로 대조했고, renderer에 포함된 19종 라이브러리와 내장 하위 코드·글꼴 고지를 보존했다.

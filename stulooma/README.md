@@ -2,7 +2,7 @@
 
 한국어로 사용하는 로컬 3D 의류 디자인·목업 편집기입니다. 독립 제작한 반팔 티셔츠와 민소매 농구 상의에 PNG·텍스트를 배치하고, 실제 3D로 회전해 확인하며, 편집 가능한 `.stulooma` 프로젝트와 PNG/JPG/GLB를 저장합니다.
 
-현재 버전은 **0.2.0 개발판**입니다. 두 기본 의류의 편집·저장·복원·출력을 Linux에서 검증했습니다. Windows/macOS 실제 실행과 출시 검증은 남아 있습니다. 검증 결과와 한계는 [테스트 기록](docs/TEST_PLAN.md), [미구현·제약](docs/GAPS.md), [배포 안내](docs/RELEASE.md)에 구분해 기록합니다.
+현재 버전은 **0.3.0 개발판**입니다. 두 기본 의류의 편집·저장·복원·출력을 Linux에서 검증했습니다. Windows/macOS 실제 실행과 출시 검증은 남아 있습니다. 검증 결과와 한계는 [테스트 기록](docs/TEST_PLAN.md), [미구현·제약](docs/GAPS.md), [배포 안내](docs/RELEASE.md)에 구분해 기록합니다.
 
 ## 실행
 
@@ -36,6 +36,12 @@ bash scripts/setup-cloud-display.sh --start
 source /workspace/.cache/system/display.env
 STULOOMA_CI_NO_SANDBOX=1 npm run test:desktop
 ```
+
+## 0.3.0 Vector Studio
+
+상단 **Vector Studio**를 열고 펜·도형·직접 선택으로 로고를 편집합니다. SVG를 가져오거나 한글 문자를 입력하고, 필요한 경우 실제 글꼴 경로로 윤곽선을 만듭니다. **현재 아트보드 적용**으로 앞판/뒤판 등 의류 부위에 연결하면 벡터 편집이 3D에 반영됩니다. 저장한 `.stulooma`를 다시 열어 경로와 연결을 계속 편집할 수 있습니다.
+
+Boolean 합치기/빼기/교차/제외, 복합 패스의 투명 구멍, 그룹·클리핑·그라디언트, SVG/PNG 출력을 제공합니다. 벡터가 추가된 프로젝트는 v2이며 이전 0.2.0 앱에서는 열리지 않습니다. 원본 PNG/GLB는 보존됩니다. [벡터 기능](docs/VECTOR_SPEC.md), [검증 결과](docs/VECTOR_RESULTS.md), [호환성·남은 기능](docs/VECTOR_GAPS.md)을 확인하세요.
 
 ## 0.2.0 작업 공간 패치
 
@@ -78,10 +84,10 @@ STULOOMA_CI_NO_SANDBOX=1 npm run test:desktop
 
 ## 실행 패키지
 
-이 환경에서 생성한 패키지는 Linux x64 ZIP(로컬 `out/make/zip/linux/x64/`)과 [Windows x64 Portable ZIP](https://github.com/WOONJANG/STULOOMA/releases/tag/v0.2.0-dev)입니다. 실행 결과와 무결성 정보는 [RELEASE.md](docs/RELEASE.md)에 기록합니다. Windows에서는 ZIP을 풀어 `STULOOMA.exe`, Linux에서는 `STULOOMA`를 실행합니다. macOS 앱 번들은 이 Linux 작업에서 검증하지 않았습니다. 배포 ZIP은 서명되지 않은 개발용이며 Windows 네이티브 실행·코드 서명·설치 연결은 별도 확인이 필요합니다.
+이 환경에서 생성한 패키지는 Linux x64 ZIP(로컬 `out/make/zip/linux/x64/`)과 [Windows x64 Portable ZIP](https://github.com/WOONJANG/STULOOMA/releases/tag/v0.3.0-dev)입니다. 실행 결과와 무결성 정보는 [RELEASE.md](docs/RELEASE.md)에 기록합니다. Windows에서는 ZIP을 풀어 `STULOOMA.exe`, Linux에서는 `STULOOMA`를 실행합니다. macOS 앱 번들은 이 Linux 작업에서 검증하지 않았습니다. 배포 ZIP은 서명되지 않은 개발용이며 Windows 네이티브 실행·코드 서명·설치 연결은 별도 확인이 필요합니다.
 
 ## 자료와 라이선스
 
 [전체 요구사항](docs/MASTER_PROMPT.md), [기능 명세](docs/SPEC.md), [UI](docs/UI_SPEC.md), [아키텍처](docs/ARCHITECTURE.md), [파일 형식](docs/FILE_FORMAT.md), [모델 안내](docs/MODEL_GUIDE.md), [클린룸 기록](docs/CLEANROOM.md)을 제공합니다. 개발자는 [CLAUDE.md](CLAUDE.md)를 먼저 읽습니다.
 
-기본 의류·아이콘·시험용 도형은 자체 제작했습니다. 한글 글꼴은 로컬 번들 **Noto Sans KR Variable (OFL-1.1)**, 범용 아이콘은 Lucide (ISC)입니다. 런타임 의존성과 원문 고지는 [LICENSES.md](docs/LICENSES.md), [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt), [기계 판독 기록](THIRD_PARTY_NOTICES.json)에 있습니다. 자체 애플리케이션은 현재 `UNLICENSED`이며 의존성 라이선스가 앱 전체의 배포권을 부여하지 않습니다. 상용 배포 전 자체 배포 정책·상표·코드 서명·OS별 검증이 남아 있습니다. 현재 renderer에 포함된 16종 라이브러리와 글꼴의 라이선스 원문을 동봉했습니다.
+기본 의류·아이콘·시험용 도형은 자체 제작했습니다. 한글 글꼴은 로컬 번들 **Noto Sans KR Variable 및 Noto Sans CJK KR Regular (OFL-1.1)**, 범용 아이콘은 Lucide (ISC)입니다. 런타임 의존성과 원문 고지는 [LICENSES.md](docs/LICENSES.md), [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt), [기계 판독 기록](THIRD_PARTY_NOTICES.json)에 있습니다. 자체 애플리케이션은 현재 `UNLICENSED`이며 의존성 라이선스가 앱 전체의 배포권을 부여하지 않습니다. 상용 배포 전 자체 배포 정책·상표·코드 서명·OS별 검증이 남아 있습니다. 현재 renderer에 포함된 19종 라이브러리와 내장 하위 코드·글꼴의 라이선스 원문을 동봉했습니다.

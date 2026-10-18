@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <title>STULOOMA 독립 SVG 규격 시험</title>
+  <defs>
+    <linearGradient id="uniform" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4de0bd"/><stop offset="1" stop-color="#2466bb"/></linearGradient>
+    <radialGradient id="light"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#875cd9"/></radialGradient>
+    <clipPath id="badge-clip"><circle cx="110" cy="110" r="90"/></clipPath>
+  </defs>
+  <g id="선과-곡선" transform="translate(30 30)" fill="none" stroke="#4de0bd" stroke-width="4">
+    <line x1="0" y1="0" x2="200" y2="30"/>
+    <path d="M0 60 C40 0 90 120 140 60 S220 20 260 60 Q290 90 320 60 T380 60 A30 20 20 0 1 440 60"/>
+    <polyline points="0,130 40,95 80,130 120,95"/>
+  </g>
+  <g id="기본-도형" transform="translate(30 230)">
+    <rect width="120" height="80" rx="15" fill="url(#uniform)"/>
+    <ellipse cx="210" cy="40" rx="55" ry="35" fill="url(#light)"/>
+    <polygon points="300,0 350,20 335,80 285,80 270,20" fill="#d58c43"/>
+    <path id="구멍-복합패스" d="M400 0H500V80H400Z M425 20H475V60H425Z" fill-rule="evenodd" fill="#dd5577"/>
+  </g>
+  <g id="클리핑-배지" transform="translate(550 70) rotate(12 110 110)" clip-path="url(#badge-clip)">
+    <rect x="0" y="0" width="220" height="220" fill="url(#uniform)"/>
+    <path d="M0 30L220 130V170L0 70Z" fill="#ffffff"/>
+  </g>
+  <text x="35" y="430" font-family="Noto Sans KR Variable" font-size="42" font-weight="700" fill="#d7ebe4">유니폼 디자인</text>
+  <text x="35" y="490" font-family="Noto Sans KR Variable" font-size="30" fill="#4de0bd">STULOOMA VECTOR STUDIO</text>
+</svg>

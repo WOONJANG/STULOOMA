@@ -1,0 +1,21 @@
+
+> stulooma@0.3.0 test
+> vitest run
+
+
+ RUN  v5.0.5 /workspace/STULOOMA/stulooma
+
+
+ Test Files  10 passed (10)
+      Tests  147 passed (147)
+   Start at  12:48:54
+   Duration  1.86s (tests 73%, import 16%, transform 10%, worker 2%)
+
+    Isolate  10 workers spawned · ~136ms startup each (spawn + environment, per file)
+             at least ~317ms faster with isolate: false — reuses workers across files instead of one per file
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

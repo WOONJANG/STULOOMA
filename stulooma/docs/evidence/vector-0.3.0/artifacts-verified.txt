@@ -1,0 +1,30 @@
+[
+  {
+    "version": "0.3.0",
+    "platform": "linux",
+    "path": "out/make/zip/linux/x64/STULOOMA-linux-x64-0.3.0.zip",
+    "bytes": 142069896,
+    "sha256": "48f4297e827bc431b3fa7b19bb154de51a6781a75fff372774be065c5655e6cb",
+    "zipCRCVerified": true,
+    "zipEntries": 77,
+    "executable": "STULOOMA-linux-x64/STULOOMA",
+    "executableFormat": "ELF x86-64",
+    "nativeRunVerified": true,
+    "packagedFilesVerified": 137,
+    "appAsarSha256": "fe40f091e040e115cb29f3287e298c1a0577a689721a7c27c8dada3d13f7ce1a"
+  },
+  {
+    "version": "0.3.0",
+    "platform": "win32",
+    "path": "out/make/zip/win32/x64/STULOOMA-win32-x64-0.3.0.zip",
+    "bytes": 177457716,
+    "sha256": "8ef143b61d99b837a71ebef90d6ff90e128861c52d5613133dfe9ef1cfe152ec",
+    "zipCRCVerified": true,
+    "zipEntries": 78,
+    "executable": "STULOOMA-win32-x64/STULOOMA.exe",
+    "executableFormat": "PE x86-64",
+    "nativeRunVerified": false,
+    "packagedFilesVerified": 137,
+    "appAsarSha256": "fe40f091e040e115cb29f3287e298c1a0577a689721a7c27c8dada3d13f7ce1a"
+  }
+]

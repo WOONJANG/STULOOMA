@@ -1,0 +1,20 @@
+{
+  "baseline": "a32a67495e37575ae0f07f4a8074c5421ce7311b",
+  "measurementStart": "2026-10-18T12:23:30+00:00",
+  "verificationEnd": "2026-10-18T13:12:55.701184+00:00",
+  "elapsedSeconds": 2965,
+  "fileChanges": {
+    "M": 32,
+    "A": 74,
+    "D": 0
+  },
+  "sourceCodeAndBuildScripts": {
+    "files": 26,
+    "added": 6679,
+    "removed": 78
+  },
+  "uniqueAutomatedTests": 175,
+  "passed": 175,
+  "failed": 0,
+  "sameElectronTestsRepeatedOnPackagedLinux": 4
+}

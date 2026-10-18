@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export interface WorkspacePreferences {
-  view: "split" | "3d" | "2d";
+  view: "split" | "3d" | "2d" | "vector";
   splitRatio: number;
   libraryWidth: number;
   inspectorWidth: number;
@@ -29,7 +29,7 @@ function readPreferences(): WorkspacePreferences {
         ? Math.max(min, Math.min(max, value[name]))
         : defaults[name];
     return {
-      view: ["split", "3d", "2d"].includes(value.view)
+      view: ["split", "3d", "2d", "vector"].includes(value.view)
         ? value.view
         : defaults.view,
       splitRatio: number("splitRatio", 35, 75) as number,

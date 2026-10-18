@@ -172,7 +172,7 @@ export function DesignCanvas() {
       if (alive) setTexture(result);
     }).catch(() => { /* Import and viewer error surfaces report source decode failures. */ });
     return () => { alive = false; };
-  }, [project.layers, project.regions, project.assets, project.activeRegion]);
+  }, [project.layers, project.regions, project.assets, project.activeRegion, project.vectorDocuments]);
 
   useEffect(() => {
     if (!texture || !canvas.current) return;

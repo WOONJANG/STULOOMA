@@ -1,5 +1,6 @@
 import type { AssetRecord, ProjectDocument } from '../../types/project';
 import { SUPPORTED_GLB_REQUIRED_EXTENSIONS } from './glb-policy';
+import { validateVectorDocument, VECTOR_LIMITS } from '../vector/validation';
 
 export const PROJECT_LIMITS = Object.freeze({
   archiveBytes: 64 * 1024 * 1024,
@@ -153,8 +154,9 @@ export function validateAssetBytes(bytes: Uint8Array, mime: AssetRecord['mime'])
 
 export function validateProject(input: unknown): ProjectDocument {
   const p = record(input, '프로젝트');
-  keys(p, ['format', 'version', 'id', 'name', 'createdAt', 'updatedAt', 'garment', 'activeRegion', 'regions', 'layers', 'assets', 'camera', 'settings', 'metadata'], '프로젝트');
-  if (p.format !== 'STULOOMA' || p.version !== 1) fail('지원하지 않는 STULOOMA 프로젝트 형식 또는 필수 버전입니다.');
+  keys(p, ['format', 'version', 'id', 'name', 'createdAt', 'updatedAt', 'garment', 'activeRegion', 'regions', 'layers', 'assets', 'vectorDocuments', 'camera', 'settings', 'metadata'], '프로젝트');
+  if (p.format !== 'STULOOMA' || p.version !== 1 && p.version !== 2) fail('지원하지 않는 STULOOMA 프로젝트 형식 또는 필수 버전입니다.');
+  if (p.version === 1 && p.vectorDocuments !== undefined) fail('벡터 문서는 프로젝트 형식 버전 2가 필요합니다.');
   id(p.id, 'id'); str(p.name, 'name');
   for (const field of ['createdAt', 'updatedAt']) { const date = str(p[field], field, 40); if (!/^\d{4}-\d{2}-\d{2}T/.test(date) || !Number.isFinite(Date.parse(date))) fail(`${field}: 날짜가 올바르지 않습니다.`); }
   const garment = record(p.garment, 'garment');
@@ -180,6 +182,15 @@ export function validateProject(input: unknown): ProjectDocument {
     if (totalBytes > PROJECT_LIMITS.expandedBytes - PROJECT_LIMITS.manifestBytes) fail('assets: 총 크기 제한을 초과했습니다.');
     validateAssetBytes(bytes, asset.mime);
   }
+  const vectorDocuments = p.vectorDocuments === undefined ? {} : record(p.vectorDocuments, 'vectorDocuments');
+  if (Object.keys(vectorDocuments).length > VECTOR_LIMITS.documents) fail('벡터 문서 개수 제한을 초과했습니다.');
+  for (const [key, document] of Object.entries(vectorDocuments)) {
+    id(key, 'vector document id');
+    try {
+      const valid = validateVectorDocument(document, assets as unknown as Record<string, AssetRecord>);
+      if (valid.id !== key) fail('벡터 문서 키와 ID가 일치하지 않습니다.');
+    } catch (error) { fail(error instanceof Error ? error.message : '벡터 문서가 올바르지 않습니다.'); }
+  }
   if (garment.assetId !== undefined) { const assetId = id(garment.assetId, 'garment.assetId'); if (!Object.hasOwn(assets, assetId) || record(assets[assetId], 'garment asset').mime !== 'model/gltf-binary') fail('garment.assetId: GLB 에셋을 찾을 수 없습니다.'); }
   if (garment.kind === 'custom' && garment.assetId === undefined) fail('사용자 모델의 GLB 에셋이 필요합니다.');
   if (garment.regionMeshes !== undefined) {
@@ -193,13 +204,22 @@ export function validateProject(input: unknown): ProjectDocument {
   if (!Array.isArray(p.layers) || p.layers.length > PROJECT_LIMITS.layers) fail('layers: 레이어 개수 제한을 초과했습니다.');
   const layerIds = new Set<string>();
   for (const value of p.layers) {
-    const layer = record(value, 'layer'); keys(layer, ['id', 'name', 'type', 'regionId', 'assetId', 'text', 'color', 'fontSize', 'x', 'y', 'width', 'height', 'rotation', 'opacity', 'visible', 'locked'], 'layer');
+    const layer = record(value, 'layer'); keys(layer, ['id', 'name', 'type', 'regionId', 'assetId', 'vectorDocumentId', 'vectorArtboardId', 'text', 'color', 'fontSize', 'x', 'y', 'width', 'height', 'rotation', 'opacity', 'visible', 'locked'], 'layer');
     const key = id(layer.id, 'layer.id'); if (layerIds.has(key)) fail('layer.id: 중복 레이어입니다.'); layerIds.add(key);
     str(layer.name, 'layer.name');
     if (!Object.hasOwn(regions, id(layer.regionId, 'layer.regionId'))) fail('layer.regionId: 존재하지 않는 부위입니다.');
     if (layer.type === 'image') { const assetId = id(layer.assetId, 'layer.assetId'); if (!Object.hasOwn(assets, assetId) || record(assets[assetId], 'layer asset').mime !== 'image/png') fail('layer.assetId: PNG 에셋을 찾을 수 없습니다.'); }
     else if (layer.type === 'text') { str(layer.text, 'layer.text', 2000, true); color(layer.color, 'layer.color'); num(layer.fontSize, 'layer.fontSize', 0.001, 1024); }
+    else if (layer.type === 'vector') {
+      if (p.version !== 2) fail('벡터 연결은 프로젝트 형식 버전 2가 필요합니다.');
+      const documentId = id(layer.vectorDocumentId, 'layer.vectorDocumentId');
+      const artboardId = id(layer.vectorArtboardId, 'layer.vectorArtboardId');
+      const document = Object.hasOwn(vectorDocuments, documentId) ? vectorDocuments[documentId] as { artboards: { id: string }[] } : undefined;
+      if (!document || !document.artboards.some(artboard => artboard.id === artboardId)) fail('벡터 연결 문서 또는 아트보드를 찾을 수 없습니다.');
+      if (layer.assetId !== undefined || layer.text !== undefined || layer.fontSize !== undefined || layer.color !== undefined) fail('벡터 연결에 래스터/텍스트 데이터가 혼합되었습니다.');
+    }
     else fail('layer.type: 지원하지 않는 레이어입니다.');
+    if (layer.type !== 'vector' && (layer.vectorDocumentId !== undefined || layer.vectorArtboardId !== undefined)) fail('벡터 참조와 레이어 유형이 일치하지 않습니다.');
     num(layer.x, 'layer.x', -10, 10); num(layer.y, 'layer.y', -10, 10);
     num(layer.width, 'layer.width', 0.00001, 20); num(layer.height, 'layer.height', 0.00001, 20); num(layer.rotation, 'layer.rotation', -36000, 36000); num(layer.opacity, 'layer.opacity', 0, 1);
     bool(layer.visible, 'layer.visible'); bool(layer.locked, 'layer.locked');

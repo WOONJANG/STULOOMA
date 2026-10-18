@@ -6,7 +6,7 @@ export const channels = {
   rendererReady: 'stulooma:renderer-ready',
 } as const;
 
-export type ExportKind = 'project' | 'png' | 'jpg' | 'glb';
+export type ExportKind = 'project' | 'png' | 'jpg' | 'glb' | 'svg';
 export interface SaveFileRequest {
   name: string;
   data: Uint8Array;

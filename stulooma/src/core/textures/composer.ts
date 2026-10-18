@@ -1,4 +1,5 @@
 import type { ArtworkLayer, ProjectDocument } from '../../types/project';
+import { clearVectorRenderCache, renderVectorDocument } from '../vector/render';
 
 // Only local PNG assets are accepted. Keeping decoded images in a small LRU avoids
 // decoding an artwork again for every drag while still releasing old projects.
@@ -38,6 +39,7 @@ function loadPNG(data: string): Promise<HTMLImageElement> {
 
 export function clearTextureImageCache(): void {
   decodedImages.clear();
+  clearVectorRenderCache();
 }
 
 export function layerTransform(layer: ArtworkLayer, size: number) {
@@ -67,10 +69,18 @@ export async function composeRegion(
   ctx.fillStyle = project.regions[regionId]?.color ?? '#e8e6e0';
   ctx.fillRect(0, 0, size, size);
   const layers = project.layers.filter(layer => layer.regionId === regionId && layer.visible);
-  const [images] = await Promise.all([
+  const [images, vectors] = await Promise.all([
     Promise.all(layers.map(async layer => {
       const asset = layer.assetId ? project.assets[layer.assetId] : undefined;
       return layer.type === 'image' && asset ? loadPNG(asset.data) : undefined;
+    })),
+    Promise.all(layers.map(async layer => {
+      if (layer.type !== 'vector') return undefined;
+      const vector = layer.vectorDocumentId ? project.vectorDocuments?.[layer.vectorDocumentId] : undefined;
+      if (!vector || !layer.vectorArtboardId) throw new Error(`벡터 레이어의 문서 또는 아트보드를 찾을 수 없습니다: ${layer.name}`);
+      return renderVectorDocument(vector, layer.vectorArtboardId, project.assets,
+        Math.max(1, Math.min(4096, Math.round(layer.width * size))),
+        Math.max(1, Math.min(4096, Math.round(layer.height * size))), true);
     })),
     // Korean webfonts are split by Unicode range. Request each actual text so
     // the relevant local subsets finish loading before baking pixels into UVs.
@@ -87,7 +97,10 @@ export async function composeRegion(
     if (layer.type === 'image') {
       const img = images[index];
       if (img) ctx.drawImage(img, -transform.width / 2, -transform.height / 2, transform.width, transform.height);
-    } else {
+    } else if (layer.type === 'vector') {
+      const vector = vectors[index];
+      if (vector) ctx.drawImage(vector, -transform.width / 2, -transform.height / 2, transform.width, transform.height);
+    } else if (layer.type === 'text') {
       const fontSize = (layer.fontSize ?? 80) * size / 1024;
       ctx.font = `${textFont(layer, size)}, "Malgun Gothic", system-ui, sans-serif`;
       ctx.fillStyle = layer.color ?? '#141b23';

@@ -1,0 +1,110 @@
+[
+  {
+    "url": "https://helpx.adobe.com/kr/illustrator/user-guide.html",
+    "checkedAt": "2026-10-18T12:27:48.412761+00:00",
+    "status": 200,
+    "finalUrl": "https://helpx.adobe.com/kr/illustrator/desktop.html",
+    "bytes": 570104,
+    "title": "Illustrator 데스크탑 도움말",
+    "shortExcerpt": "Illustrator 데스크탑 도움말"
+  },
+  {
+    "url": "https://helpx.adobe.com/kr/illustrator/using/default-keyboard-shortcuts.html",
+    "checkedAt": "2026-10-18T12:27:48.413666+00:00",
+    "status": 200,
+    "finalUrl": "https://helpx.adobe.com/kr/illustrator/using/default-keyboard-shortcuts.html",
+    "bytes": 401568,
+    "title": "Illustrator의 기본 키보드 단축키 | Illustrator",
+    "shortExcerpt": "[직접 선택] 도구와 [그룹 선택] 도구 간 전환"
+  },
+  {
+    "url": "https://helpx.adobe.com/illustrator/using/artwork-essentials/paths-and-shapes.html",
+    "checkedAt": "2026-10-18T12:27:48.414179+00:00",
+    "status": 200,
+    "finalUrl": "https://helpx.adobe.com/illustrator/using/artwork-essentials/paths-and-shapes.html",
+    "bytes": 201044,
+    "title": "Learn how to create and modify paths and shapes in Adobe Illustrator. | Illustrator",
+    "shortExcerpt": "A path contains one or more straight or curved line segments that you draw on canvas using the Pen, Pencil, or Curvature tool."
+  },
+  {
+    "url": "https://helpx.adobe.com/illustrator/desktop/manage-objects/reshape-transform-objects/combine-objects-using-pathfinder-effects.html",
+    "checkedAt": "2026-10-18T12:27:48.414467+00:00",
+    "status": 200,
+    "finalUrl": "https://helpx.adobe.com/illustrator/desktop/manage-objects/reshape-transform-objects/combine-objects-using-pathfinder-effects.html",
+    "bytes": 504021,
+    "title": "Edit overlapping objects with Pathfinder in Illustrator | Illustrator",
+    "shortExcerpt": "When you apply a Pathfinder option, you permanently change the original objects."
+  },
+  {
+    "url": "https://helpx.adobe.com/illustrator/desktop/manage-objects/edit-objects/edit-clipping-masks.html",
+    "checkedAt": "2026-10-18T12:27:48.414799+00:00",
+    "status": 200,
+    "finalUrl": "https://helpx.adobe.com/illustrator/desktop/manage-objects/edit-objects/edit-clipping-masks.html",
+    "bytes": 492640,
+    "title": "Edit clipping masks in Illustrator | Illustrator",
+    "shortExcerpt": "Learn how to change the shape and content of clipping masks to control which parts of the artwork are visible within defined shapes."
+  },
+  {
+    "url": "https://helpx.adobe.com/kr/illustrator/using/saving-artwork.html",
+    "checkedAt": "2026-10-18T12:27:51.387504+00:00",
+    "status": 200,
+    "finalUrl": "https://helpx.adobe.com/kr/illustrator/using/saving-artwork.html",
+    "bytes": 225331,
+    "title": "Illustrator에서 아트워크를 저장하는 방법 | Illustrator",
+    "shortExcerpt": "PDF 및 SVG 형식의 경우 모든 Illustrator 데이터를 보존하려면 Illustrator 편집 기능 보존 옵션을 선택해야 합니다."
+  },
+  {
+    "url": "https://www.w3.org/TR/SVG2/",
+    "checkedAt": "2026-10-18T12:27:51.798622+00:00",
+    "status": 200,
+    "finalUrl": "https://www.w3.org/TR/SVG2/",
+    "bytes": 72652,
+    "title": "Scalable Vector Graphics (SVG) 2",
+    "shortExcerpt": "Scalable Vector Graphics (SVG) 2"
+  },
+  {
+    "url": "https://www.w3.org/TR/SVG2/paths.html",
+    "checkedAt": "2026-10-18T12:27:51.856207+00:00",
+    "status": 200,
+    "finalUrl": "https://www.w3.org/TR/SVG2/paths.html",
+    "bytes": 85037,
+    "title": "Paths — SVG 2",
+    "shortExcerpt": "An elliptical arc segment draws a segment of an ellipse."
+  },
+  {
+    "url": "https://www.w3.org/TR/SVG2/coords.html",
+    "checkedAt": "2026-10-18T12:27:51.882381+00:00",
+    "status": 200,
+    "finalUrl": "https://www.w3.org/TR/SVG2/coords.html",
+    "bytes": 197454,
+    "title": "Coordinate Systems, Transformations and Units — SVG 2",
+    "shortExcerpt": "Coordinate Systems, Transformations and Units"
+  },
+  {
+    "url": "https://www.w3.org/TR/SVG2/painting.html",
+    "checkedAt": "2026-10-18T12:27:51.989109+00:00",
+    "status": 200,
+    "finalUrl": "https://www.w3.org/TR/SVG2/painting.html",
+    "bytes": 164046,
+    "title": "Painting: Filling, Stroking and Marker Symbols — SVG 2",
+    "shortExcerpt": "The fill-rule property provides two options for how the inside of a shape is determined: nonzero; evenodd."
+  },
+  {
+    "url": "https://www.w3.org/TR/SVG2/interact.html",
+    "checkedAt": "2026-10-18T12:27:52.029283+00:00",
+    "status": 200,
+    "finalUrl": "https://www.w3.org/TR/SVG2/interact.html",
+    "bytes": 73446,
+    "title": "Scripting and Interactivity — SVG 2",
+    "shortExcerpt": "This chapter describes scripting and interactivity in SVG."
+  },
+  {
+    "url": "https://www.electronjs.org/docs/latest/tutorial/security",
+    "checkedAt": "2026-10-18T12:27:52.051464+00:00",
+    "status": 200,
+    "finalUrl": "https://www.electronjs.org/docs/latest/tutorial/security",
+    "bytes": 169776,
+    "title": "Security | Electron",
+    "shortExcerpt": "Enable context isolation in all renderers; Enable process sandboxing."
+  }
+]

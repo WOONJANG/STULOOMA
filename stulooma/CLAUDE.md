@@ -36,7 +36,7 @@ Electron/Node/TypeScript/Vite/React 19, Three.js/Fiber 9/Drei, Canvas 2D, Zustan
 
 ## 9. 파일 형식
 
-`.stulooma`는 버전 1 ZIP/JSON과 원본 에셋. 원본 이미지·GLB 바이트와 편집 가능한 레이어·부위·재질·카메라를 보존한다. 미래 버전이나 미지원 필수 구조는 경고하고 덮어쓰지 않는다. 경로/팽창/중복/필드 검증을 선행한다. `docs/FILE_FORMAT.md`를 따른다.
+`.stulooma`는 버전 1/2 ZIP/JSON과 원본 에셋. 벡터 없는 문서는 v1을 유지하고 벡터 문서는 v2를 사용한다. 원본 이미지·GLB 바이트와 편집 가능한 레이어·부위·재질·카메라를 보존한다. 미래 버전이나 미지원 필수 구조는 경고하고 덮어쓰지 않는다. 경로/팽창/중복/필드 검증을 선행한다. `docs/FILE_FORMAT.md`를 따른다.
 
 ## 10. 에셋·라이선스
 
@@ -61,3 +61,16 @@ Electron contextIsolation/sandbox 활성, Node integration 비활성, 최소 pre
 ## 15. 완료 기준
 
 실제 코드 → UI 실행 → 문서 데이터 변경 → 2D/3D 반영 → 저장/재열기 → 오류 처리 → 관련 테스트 통과 → 문서 일치의 전체 흐름을 확인해야 완료다. 모든 P0 인수 흐름 검증 전 최초 완성판으로 선언하지 않는다. 미구현·검증하지 못한 항목은 `docs/GAPS.md`에 남긴다. 보고는 실제 결과를 기준으로 완료/검증/남은 작업을 구분한다. 측정하지 않은 성능·작업 시간·테스트 수를 추정하지 않는다.
+
+## 16. Vector Studio 개발 규칙
+
+- 공개 Adobe 사용자 도움말과 W3C SVG 규격의 관찰 가능한 동작만 참고한다. 타사 앱 소스·디컴파일·고유 자산·AI 비공개 편집 데이터를 사용하지 않는다. 실제 접근 근거는 `docs/VECTOR_CLEANROOM.md`에 기록한다.
+- `src/types/vector.ts`는 JSON 계약, `src/core/vector`는 문서·기하·Boolean·검증·SVG·렌더·문자, `src/features/vector-studio`는 편집 UI다. 빈 폴더·버튼만으로 완료로 표시하지 않는다.
+- 기존 ProjectDocument·의류 UV·3D Viewer·Texture Composer·asset bytes를 재사용한다. vector artwork layer는 vector document/artboard ID를 참조하며 편집 원본과 3D용 렌더를 분리한다.
+- 좌표·핸들·6성분 affine matrix는 문서 데이터다. viewport zoom/pan·React/GPU 객체·Electron 경로/권한은 문서에 저장하지 않는다. ID·참조·부모·clip/mask 순환·숫자/복잡도 제한을 검증한다.
+- SVG는 허용 목록 기반 비실행 XML 입력으로 정규화한다. script/on*·외부자원·DOCTYPE/entity·손상XML·과도한경로/계층을 거부한다. 원본 markup을 실행 DOM에 삽입하지 않는다. 미지원 기능 손실을 경고하고 AI/PDF/SVG 완전 호환을 주장하지 않는다.
+- 모든 vector 문서 편집·garment binding은 기존 typed EditCommand/history/dirty를 사용한다. 별도 vector Undo를 만들지 않는다. drag는 한 기록이며 Undo/Redo는 벡터와 3D를 함께 복원한다.
+- vector 도구 키는 해당 작업 공간이 소유한다. 기존 공통 파일/Undo/검색키를 중복 실행하지 않는다. 입력·IME·조합229·처리된 이벤트를 우선한다.
+- 벡터가 없는 기존 프로젝트는 v1을 유지한다. vectorDocuments 또는 vector layer를 추가하면 프로젝트v2를 사용한다. 새 앱은v1/v2를 읽고 구앱은v2를 안전 거부한다. 원본PNG/GLB는 재인코딩하지 않는다.
+- 관련 명세는 `docs/VECTOR_{SPEC,UI_SPEC,ARCHITECTURE,FILE_FORMAT,INTEGRATION_AUDIT,TEST_PLAN,GAPS}.md`다. `npm run typecheck`, `npm test`, `npm run test:e2e`, `npm run build`, `npm run test:desktop`와 실제 editable SVG/project roundtrip·악성SVG·3D alpha/UV·기존 회귀를 확인한다.
+- 완료는 실제 UI→데이터→렌더→Undo→저장/재열기→오류→자동검사→기존회귀까지 확인한 상태다. Boolean 경계를 래스터로, 구멍을 흰색 덮개로, 문자 윤곽선을 PNG로 위장하지 않는다. 미구현 P1/P2/P3·플랫폼/IME/성능 미검증을 GAPS에 남긴다.

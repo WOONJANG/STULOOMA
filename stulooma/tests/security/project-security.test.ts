@@ -36,7 +36,7 @@ describe('untrusted project archive defenses', () => {
   });
   it('rejects truncated archives, unsupported required versions, and unknown required fields', async () => {
     const bytes = await saveProject(createProject()); await expect(loadProject(bytes.subarray(0, bytes.length - 1))).rejects.toThrow();
-    await expect(loadProject(archive({ ...createProject(), version: 2 }))).rejects.toThrow(/버전/);
+    await expect(loadProject(archive({ ...createProject(), version: 3 }))).rejects.toThrow(/버전/);
     expect(() => validateProject({ ...createProject(), requiredFutureData: [] })).toThrow(/필수 구조/);
   });
   it('rejects malformed and prototype-polluting metadata', async () => {

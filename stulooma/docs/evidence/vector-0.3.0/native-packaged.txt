@@ -1,0 +1,20 @@
+
+> stulooma@0.3.0 test:desktop
+> playwright test --config=playwright.electron.config.ts
+
+
+Running 4 tests using 1 worker
+
+(node:59651) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/electron/desktop.spec.ts:15:1 › desktop uses a restricted bridge, opens and atomically saves native files (11.1s)
+  ✓  2 tests/electron/desktop.spec.ts:218:1 › a project passed at startup opens after the renderer is ready (5.3s)
+  ✓  3 tests/electron/desktop.spec.ts:240:1 › desktop UI shortcuts preserve document destinations and commit focused drafts (13.7s)
+  ✓  4 tests/electron/desktop.spec.ts:367:1 › desktop vector edits preserve legacy assets and round-trip through native project and SVG saves (18.4s)
+
+  4 passed (48.8s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

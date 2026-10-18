@@ -4,6 +4,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { unzipSync } from 'fflate';
 import type { OpenProjectResult, SaveProjectRequest, SavedProjectResult } from '../../electron/ipc/channels';
+import { dataUrlToBytes, loadProject } from '../../src/core/project';
+import type { ProjectDocument } from '../../src/types/project';
 
 interface NativeBridge {
   openProject: () => Promise<OpenProjectResult | null>;
@@ -29,6 +31,7 @@ test('desktop uses a restricted bridge, opens and atomically saves native files'
       },
     });
     const page = await application.firstWindow();
+    await page.waitForURL('app://stulooma/index.html');
     await page.waitForLoadState('domcontentloaded');
     await expect(page.getByRole('button', { name: '프로젝트 저장 (Ctrl+S)' })).toBeVisible();
     await expect(page.getByTestId('viewer-state')).toHaveAttribute('data-state', 'ready');
@@ -224,6 +227,8 @@ test('a project passed at startup opens after the renderer is ready', async () =
       env: { ...process.env, XDG_CONFIG_HOME: path.join(temporary, 'config'), XDG_CACHE_HOME: path.join(temporary, 'cache') },
     });
     const page = await application.firstWindow();
+    await page.waitForURL('app://stulooma/index.html');
+    await page.waitForLoadState('domcontentloaded');
     await expect(page.getByRole('textbox', { name: '프로젝트 이름' })).toHaveValue('서울 유니폼 — 김수현 23');
     await expect(page.getByTestId('viewer-state')).toHaveAttribute('data-state', 'ready');
   } finally {
@@ -250,6 +255,8 @@ test('desktop UI shortcuts preserve document destinations and commit focused dra
       env: { ...process.env, XDG_CONFIG_HOME: path.join(temporary, 'config'), XDG_CACHE_HOME: path.join(temporary, 'cache') },
     });
     const page = await application.firstWindow();
+    await page.waitForURL('app://stulooma/index.html');
+    await page.waitForLoadState('domcontentloaded');
     const projectName = page.getByRole('textbox', { name: '프로젝트 이름' });
     const saveButton = page.getByRole('button', { name: '프로젝트 저장 (Ctrl+S)' });
     await expect(projectName).toHaveValue('서울 유니폼 — 김수현 23');
@@ -332,6 +339,112 @@ test('desktop UI shortcuts preserve document destinations and commit focused dra
     await expect.poll(async () => (await manifestAt(fresh)).name).toBe('Fresh after rejected open');
     expect(await countDialogs()).toBe(3);
     expect(await readFile(invalid, 'utf8')).toBe('not a project archive');
+
+    // A focused draft can be the only change in an otherwise saved document.
+    // Closing must commit it before checking dirty state and allow canceling.
+    await page.getByRole('button', { name: '텍스트 추가', exact: true }).click();
+    await shortcut('Control+s');
+    await expect.poll(async () => (await manifestAt(fresh)).layers.length).toBe(1);
+    await page.getByRole('textbox', { name: '텍스트 내용' }).fill('닫기 전 한글 초안');
+    await application.evaluate(({ dialog }) => {
+      const state = globalThis as typeof globalThis & { draftClosePrompts: number };
+      state.draftClosePrompts = 0;
+      dialog.showMessageBoxSync = () => { state.draftClosePrompts++; return 0; };
+    });
+    await application.evaluate(({ BrowserWindow }) => { BrowserWindow.getAllWindows()[0].close(); });
+    await expect.poll(() => application!.evaluate(() =>
+      (globalThis as typeof globalThis & { draftClosePrompts: number }).draftClosePrompts)).toBe(1);
+    expect(page.isClosed()).toBe(false);
+    await shortcut('Control+s');
+    await expect.poll(async () => (await manifestAt(fresh)).layers.some(layer => layer.text === '닫기 전 한글 초안')).toBe(true);
+    await application.evaluate(({ dialog }) => { dialog.showMessageBoxSync = () => 1; });
+  } finally {
+    await application?.close();
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test('desktop vector edits preserve legacy assets and round-trip through native project and SVG saves', async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), 'stulooma-vector-native-'));
+  let application: ElectronApplication | undefined;
+  try {
+    const original = path.join(temporary, 'legacy.stulooma');
+    const destination = path.join(temporary, 'editable-vector.stulooma');
+    const svgDestination = path.join(temporary, 'editable-vector.svg');
+    const legacyBytes = await readFile('samples/projects/korean-front-back.stulooma');
+    const legacy = await loadProject(legacyBytes); await writeFile(original, legacyBytes);
+    application = await electron.launch({
+      executablePath: process.env.STULOOMA_TEST_EXECUTABLE || undefined,
+      args: [...(process.env.STULOOMA_TEST_EXECUTABLE ? [] : ['.']), original,
+        ...(process.env.STULOOMA_CI_NO_SANDBOX === '1' ? ['--no-sandbox'] : []),
+        '--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
+      env: { ...process.env, XDG_CONFIG_HOME: path.join(temporary, 'config'), XDG_CACHE_HOME: path.join(temporary, 'cache') },
+    });
+    const page = await application.firstWindow();
+    await page.waitForURL('app://stulooma/index.html');
+    await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('textbox', { name: '프로젝트 이름' })).toHaveValue(legacy.name);
+    await expect(page.getByTestId('viewer-state')).toHaveAttribute('data-state', 'ready');
+    await page.getByRole('button', { name: 'Vector Studio', exact: true }).click();
+    const studio = page.getByTestId('vector-studio'); await expect(studio).toBeVisible();
+    await studio.getByLabel('벡터 SVG 가져오기').setInputFiles({
+      name: 'native-vector.svg', mimeType: 'image/svg+xml',
+      buffer: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect id="native-logo" x="60" y="70" width="240" height="190" rx="20" fill="#55d5b0"/></svg>'),
+    });
+    await studio.getByTitle('native-logo', { exact: true }).click();
+    await studio.getByLabel('벡터 칠 색상').fill('#c9248a');
+    await studio.getByLabel('벡터 적용 부위').selectOption('FRONT');
+    await studio.getByRole('button', { name: '현재 아트보드 적용', exact: true }).click();
+    await expect(studio.getByRole('button', { name: '앞판 벡터 연결 해제' })).toBeVisible();
+
+    await application.evaluate(({ dialog }, selected) => {
+      const state = globalThis as typeof globalThis & { vectorSaveDialogs: number };
+      state.vectorSaveDialogs = 0;
+      dialog.showSaveDialog = async () => { state.vectorSaveDialogs++; return { canceled: false, filePath: selected }; };
+    }, destination);
+    const saveButton = page.getByRole('button', { name: '프로젝트 저장 (Ctrl+S)' });
+    await saveButton.focus(); await page.keyboard.press('Control+Shift+s');
+    const readSaved = async (): Promise<ProjectDocument | null> => {
+      try { return await loadProject(await readFile(destination)); } catch { return null; }
+    };
+    await expect.poll(async () => (await readSaved())?.version).toBe(2);
+    const saved = (await readSaved())!; const vectorLayer = saved.layers.find(layer => layer.type === 'vector')!;
+    const vectorDocument = saved.vectorDocuments?.[vectorLayer.vectorDocumentId!]!;
+    expect(vectorLayer.regionId).toBe('FRONT'); expect(vectorDocument.objects[0]?.geometry?.contours[0]?.anchors.length).toBeGreaterThan(3);
+    expect(vectorDocument.objects[0]?.fill).toEqual({ type: 'solid', color: '#c9248a', opacity: 1 });
+    expect(saved.layers.filter(layer => layer.type !== 'vector')).toEqual(legacy.layers);
+    for (const [id, asset] of Object.entries(legacy.assets)) expect(dataUrlToBytes(saved.assets[id]!.data, asset.mime)).toEqual(dataUrlToBytes(asset.data, asset.mime));
+    expect(await readFile(original)).toEqual(legacyBytes);
+
+    // Loading the native ZIP restores editable geometry, then a new edit updates
+    // both the native project destination and the independent SVG export.
+    await application.evaluate(({ dialog }, selected) => {
+      dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [selected] });
+    }, destination);
+    await page.getByRole('button', { name: '새 프로젝트 (Ctrl+N)' }).click();
+    await page.getByRole('button', { name: '프로젝트 열기 (Ctrl+O)' }).click();
+    await expect(page.getByRole('textbox', { name: '프로젝트 이름' })).toHaveValue(legacy.name);
+    await expect(studio.getByTitle('native-logo', { exact: true })).toBeVisible();
+    await studio.getByTitle('native-logo', { exact: true }).click();
+    await expect(studio.getByLabel('벡터 칠 색상')).toHaveValue('#c9248a');
+    await studio.getByLabel('벡터 칠 색상').fill('#2472dc');
+    await saveButton.focus(); await page.keyboard.press('Control+s');
+    await expect.poll(async () => (await readSaved())?.vectorDocuments?.[vectorDocument.id]?.objects[0]?.fill).toEqual({ type: 'solid', color: '#2472dc', opacity: 1 });
+    expect(await application.evaluate(() => (globalThis as typeof globalThis & { vectorSaveDialogs: number }).vectorSaveDialogs)).toBe(1);
+    await application.evaluate(({ dialog }, selected) => {
+      dialog.showSaveDialog = async () => ({ canceled: false, filePath: selected });
+    }, svgDestination);
+    await studio.getByRole('button', { name: 'SVG 내보내기', exact: true }).click();
+    await expect.poll(async () => { try { return await readFile(svgDestination, 'utf8'); } catch { return ''; } }).toContain('#2472dc');
+    const svgText = await readFile(svgDestination, 'utf8');
+    expect(svgText).toMatch(/^(?:<\?xml[^>]*>\s*)?<svg\s/); expect(svgText).toContain('<path'); expect(svgText).not.toContain('<script');
+    expect(await page.evaluate(async () => {
+      const response = await fetch('/fonts/NotoSansCJKkr-Regular.otf');
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      await document.fonts.load('48px "STULOOMA Noto Sans KR"', '서울 유니폼');
+      return { ok: response.ok, mime: response.headers.get('content-type'), signature: String.fromCharCode(...bytes.subarray(0, 4)), loaded: [...document.fonts].some(face => face.family === 'STULOOMA Noto Sans KR' && face.status === 'loaded') };
+    })).toEqual({ ok: true, mime: 'font/otf', signature: 'OTTO', loaded: true });
+    await page.screenshot({ path: 'test-results/electron/vector-native.png' });
   } finally {
     await application?.close();
     await rm(temporary, { recursive: true, force: true });

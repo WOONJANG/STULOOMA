@@ -152,8 +152,12 @@ function GarmentSurface({ group, project, onSelectRegion, onError, onReady, onUp
     const changed = regionIds.flatMap(id => {
       const layers = project.layers.filter(layer => layer.regionId === id && layer.visible);
       const snapshot = {
-        key: JSON.stringify([project.regions[id]?.color, project.settings.textureSize, layers]),
-        images: layers.filter(layer => layer.type === 'image').map(layer => project.assets[layer.assetId ?? '']?.data ?? ''),
+        key: JSON.stringify([project.regions[id]?.color, project.settings.textureSize, layers,
+          layers.filter(layer => layer.type === 'vector').map(layer => project.vectorDocuments?.[layer.vectorDocumentId ?? ''])]),
+        images: [
+          ...layers.filter(layer => layer.type === 'image').map(layer => project.assets[layer.assetId ?? '']?.data ?? ''),
+          ...layers.filter(layer => layer.type === 'vector').flatMap(layer => (project.vectorDocuments?.[layer.vectorDocumentId ?? '']?.assets ?? []).map(assetId => project.assets[assetId]?.data ?? '')),
+        ],
       };
       const previous = snapshots.current.get(id);
       return previous?.key === snapshot.key && previous.images.length === snapshot.images.length && previous.images.every((data, index) => data === snapshot.images[index])
@@ -181,7 +185,7 @@ function GarmentSurface({ group, project, onSelectRegion, onError, onReady, onUp
       })
       .catch(error => { if (current) errorRef.current(error instanceof Error ? error.message : '텍스처를 생성할 수 없습니다.'); });
     return () => { current = false; };
-  }, [group, project.layers, project.assets, project.regions, project.settings.textureSize, project.garment.regionMeshes, invalidate, onUpdating]);
+  }, [group, project.layers, project.assets, project.regions, project.vectorDocuments, project.settings.textureSize, project.garment.regionMeshes, invalidate, onUpdating]);
 
   useEffect(() => {
     materials.current.forEach((material, id) => {

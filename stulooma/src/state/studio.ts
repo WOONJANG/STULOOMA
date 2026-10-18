@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import type { ArtworkLayer, AssetRecord, GarmentKind, ProjectDocument, RegionDesign } from '../types/project';
-import { createProject, PROJECT_LIMITS } from '../core/project';
+import type { VectorDocument } from '../types/vector';
+import { createProject, PROJECT_LIMITS, dataUrlToBytes, validateAssetBytes } from '../core/project';
+import { validateVectorDocument, VECTOR_LIMITS, VectorValidationError } from '../core/vector/validation';
 
 export type ArtworkAlignment = 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom';
 export type EditCommand =
@@ -12,7 +14,11 @@ export type EditCommand =
   | { id: 'artwork.nudge'; layerId: string; dx: number; dy: number }
   | { id: 'layer.reorder'; layerId: string; direction: -1 | 1 }
   | { id: 'material.update'; regionId: string; patch: Partial<RegionDesign> }
-  | { id: 'settings.update'; patch: Partial<ProjectDocument['settings']> };
+  | { id: 'settings.update'; patch: Partial<ProjectDocument['settings']> }
+  | { id: 'vector.document.set'; document: VectorDocument; assets?: AssetRecord[] }
+  | { id: 'vector.document.remove'; documentId: string }
+  | { id: 'vector.garment.bind'; documentId: string; artboardId: string; regionId: string; layerId?: string }
+  | { id: 'vector.garment.unbind'; layerId: string };
 
 const commandLabels: Record<EditCommand['id'], string> = {
   'project.rename': '프로젝트 이름 변경', 'artwork.add': '레이어 추가',
@@ -20,6 +26,8 @@ const commandLabels: Record<EditCommand['id'], string> = {
   'artwork.duplicate': '레이어 복제', 'artwork.align': '캔버스에 정렬',
   'artwork.nudge': '레이어 이동', 'layer.reorder': '레이어 순서 변경',
   'material.update': '원단 재질 변경', 'settings.update': '작업 설정 변경',
+  'vector.document.set': '벡터 디자인 수정', 'vector.document.remove': '벡터 문서 삭제',
+  'vector.garment.bind': '벡터 디자인 의류 적용', 'vector.garment.unbind': '벡터 디자인 연결 해제',
 };
 export const commandLabel = (command: EditCommand): string => commandLabels[command.id];
 
@@ -85,7 +93,7 @@ function updateLayer(layer: ArtworkLayer, patch: Partial<ArtworkLayer>, project:
 export const useStudio = create<StudioState>((set, get) => {
   const initial = createProject();
   let savedContent: ProjectDocument | null = copy(initial);
-  let clipboard: { layer: ArtworkLayer; asset?: AssetRecord } | null = null;
+  let clipboard: { layer: ArtworkLayer; asset?: AssetRecord; vectorDocument?: VectorDocument; vectorAssets?: AssetRecord[] } | null = null;
   let pasteCount = 0;
   const isDirty = (project: ProjectDocument) => !sameContent(project, savedContent);
   const survivingSelection = (project: ProjectDocument, selected: string | null) => project.layers.some(layer => layer.id === selected) ? selected : null;
@@ -108,6 +116,7 @@ export const useStudio = create<StudioState>((set, get) => {
             p.assets[command.asset.id] = copy(command.asset);
           }
           if (command.layer.type === 'image' && p.assets[command.layer.assetId ?? '']?.mime !== 'image/png') return;
+          if (command.layer.type === 'vector' && !p.vectorDocuments?.[command.layer.vectorDocumentId ?? '']?.artboards.some(artboard => artboard.id === command.layer.vectorArtboardId)) return;
           p.layers.push(copy(command.layer)); selected = command.layer.id;
           break;
         }
@@ -174,6 +183,54 @@ export const useStudio = create<StudioState>((set, get) => {
           if (patch.mode === 'simple' || patch.mode === 'expert') p.settings.mode = patch.mode;
           break;
         }
+        case 'vector.document.set': {
+          const documents = p.vectorDocuments ?? {};
+          if (!Object.hasOwn(documents, command.document.id) && Object.keys(documents).length >= VECTOR_LIMITS.documents) throw new VectorValidationError('벡터 문서 개수 제한을 초과했습니다.');
+          for (const asset of command.assets ?? []) {
+            if (!/^[A-Za-z0-9_-]{1,128}$/.test(asset.id) || ['__proto__', 'prototype', 'constructor'].includes(asset.id) || asset.mime !== 'image/png' || typeof asset.name !== 'string' || !asset.name.trim() || asset.name.length > 160 || /[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(asset.name)) throw new VectorValidationError('벡터 이미지 에셋이 올바르지 않습니다.');
+            const existing = p.assets[asset.id];
+            if (existing && !sameAsset(existing, asset)) throw new VectorValidationError('기존 에셋 ID의 원본을 변경할 수 없습니다.');
+            if (!existing && Object.keys(p.assets).length >= PROJECT_LIMITS.assets) throw new VectorValidationError('프로젝트 에셋 개수 제한을 초과했습니다.');
+            const bytes = dataUrlToBytes(asset.data, asset.mime); validateAssetBytes(bytes, asset.mime); p.assets[asset.id] = copy(asset);
+          }
+          const totalBytes = Object.values(p.assets).reduce((sum, asset) => { const encoded = asset.data.slice(asset.data.indexOf(',') + 1); return sum + encoded.length * .75 - (encoded.endsWith('==') ? 2 : encoded.endsWith('=') ? 1 : 0); }, 0);
+          if (totalBytes > PROJECT_LIMITS.expandedBytes - PROJECT_LIMITS.manifestBytes) throw new VectorValidationError('프로젝트 에셋 총 크기 제한을 초과했습니다.');
+          const document = validateVectorDocument(command.document, p.assets);
+          p.vectorDocuments = { ...documents, [document.id]: document }; p.version = 2;
+          // Removing an artboard removes its placements in the same undo unit.
+          p.layers = p.layers.filter(layer => layer.type !== 'vector' || layer.vectorDocumentId !== document.id || document.artboards.some(artboard => artboard.id === layer.vectorArtboardId));
+          selected = survivingSelection(p, selected);
+          // The archive stores asset paths, never data URLs in its manifest.
+          // Check this before committing so every accepted vector edit is savable.
+          const manifest = { ...p, assets: Object.fromEntries(Object.entries(p.assets).map(([id, asset]) => [id, { ...asset, data: `assets/${id}.${asset.mime === 'image/png' ? 'png' : 'glb'}` }])) };
+          if (new TextEncoder().encode(JSON.stringify(manifest)).length > PROJECT_LIMITS.manifestBytes) throw new VectorValidationError('프로젝트의 편집 데이터가 2 MiB 저장 한도를 초과했습니다. 경로를 단순화하거나 문서를 나누세요.');
+          break;
+        }
+        case 'vector.document.remove': {
+          if (!p.vectorDocuments || !Object.hasOwn(p.vectorDocuments, command.documentId)) return;
+          delete p.vectorDocuments[command.documentId];
+          p.layers = p.layers.filter(layer => layer.type !== 'vector' || layer.vectorDocumentId !== command.documentId);
+          selected = survivingSelection(p, selected); break;
+        }
+        case 'vector.garment.bind': {
+          const document = p.vectorDocuments?.[command.documentId]; const artboard = document?.artboards.find(artboard => artboard.id === command.artboardId);
+          if (!document || !artboard || !Object.hasOwn(p.regions, command.regionId)) return;
+          const existing = command.layerId ? p.layers.find(layer => layer.id === command.layerId) : p.layers.find(layer => layer.type === 'vector' && layer.vectorDocumentId === document.id && layer.vectorArtboardId === artboard.id && layer.regionId === command.regionId);
+          if (command.layerId && !existing || existing && (existing.type !== 'vector' || existing.locked)) return;
+          if (existing) {
+            existing.vectorDocumentId = document.id; existing.vectorArtboardId = artboard.id; existing.regionId = command.regionId;
+            selected = existing.id;
+          } else {
+            if (p.layers.length >= PROJECT_LIMITS.layers) return;
+            const layer: ArtworkLayer = { id: crypto.randomUUID(), type: 'vector', name: document.name.slice(0, 160), vectorDocumentId: document.id, vectorArtboardId: artboard.id, regionId: command.regionId, x: .5, y: .5, width: clamp(.5 * Math.min(1, artboard.width / artboard.height), .00001, 20), height: clamp(.5 * Math.min(1, artboard.height / artboard.width), .00001, 20), rotation: 0, opacity: 1, visible: true, locked: false };
+            p.layers.push(layer); selected = layer.id;
+          }
+          p.version = 2; break;
+        }
+        case 'vector.garment.unbind': {
+          const layer = p.layers.find(layer => layer.id === command.layerId); if (!layer || layer.type !== 'vector' || layer.locked) return;
+          p.layers = p.layers.filter(item => item.id !== layer.id); selected = survivingSelection(p, selected); break;
+        }
       }
       if (sameContent(p, state.project)) return;
       p.updatedAt = nextTimestamp(state.project.updatedAt);
@@ -213,12 +270,16 @@ export const useStudio = create<StudioState>((set, get) => {
       const s = get(); const layer = s.project.layers.find(item => item.id === s.selectedLayer);
       if (!layer) return false;
       const asset = layer.assetId ? s.project.assets[layer.assetId] : undefined;
-      clipboard = copy({ layer, ...(asset ? { asset } : {}) }); pasteCount = 0;
+      const vectorDocument = layer.type === 'vector' ? s.project.vectorDocuments?.[layer.vectorDocumentId ?? ''] : undefined;
+      if (layer.type === 'vector' && !vectorDocument) return false;
+      const vectorAssets = vectorDocument?.assets.map(id => s.project.assets[id]!);
+      clipboard = copy({ layer, ...(asset ? { asset } : {}), ...(vectorDocument ? { vectorDocument, vectorAssets } : {}) }); pasteCount = 0;
       set({ canPaste: true, lastCommand: '레이어 복사' }); return true;
     },
     pasteLayer() {
       if (!clipboard) return false;
       get().endGroup(); const s = get(); const source = copy(clipboard);
+      if (s.project.layers.length >= PROJECT_LIMITS.layers) return false;
       const nextPaste = pasteCount + 1;
       const layer: ArtworkLayer = { ...source.layer, id: crypto.randomUUID(), name: `${source.layer.name.slice(0, 154)} 붙여넣기`, regionId: s.project.activeRegion, x: clamp(source.layer.x + .025 * nextPaste, -10, 10), y: clamp(source.layer.y + .025 * nextPaste, -10, 10), locked: false };
       let asset: AssetRecord | undefined;
@@ -227,7 +288,30 @@ export const useStudio = create<StudioState>((set, get) => {
         layer.assetId = existing?.id ?? crypto.randomUUID();
         if (!existing) asset = { ...source.asset, id: layer.assetId };
       }
-      get().execute({ id: 'artwork.add', layer, asset });
+      let vectorDocument: VectorDocument | undefined; const vectorAssets: AssetRecord[] = [];
+      if (source.vectorDocument) {
+        const existingDocument = s.project.vectorDocuments?.[source.vectorDocument.id];
+        if (!existingDocument || JSON.stringify(existingDocument) !== JSON.stringify(source.vectorDocument) || (source.vectorAssets ?? []).some(asset => s.project.assets[asset.id]?.data !== asset.data || s.project.assets[asset.id]?.mime !== asset.mime)) {
+          if (Object.keys(s.project.vectorDocuments ?? {}).length >= VECTOR_LIMITS.documents) return false;
+          vectorDocument = source.vectorDocument;
+          vectorDocument.id = crypto.randomUUID(); layer.vectorDocumentId = vectorDocument.id;
+          const assetIds = new Map<string, string>();
+          for (const sourceAsset of source.vectorAssets ?? []) {
+            const existing = Object.values(s.project.assets).find(item => item.mime === sourceAsset.mime && item.data === sourceAsset.data) ?? vectorAssets.find(item => item.mime === sourceAsset.mime && item.data === sourceAsset.data);
+            const id = existing?.id ?? crypto.randomUUID(); assetIds.set(sourceAsset.id, id);
+            if (!existing) vectorAssets.push({ ...sourceAsset, id });
+          }
+          if (Object.keys(s.project.assets).length + vectorAssets.length > PROJECT_LIMITS.assets) return false;
+          vectorDocument.assets = vectorDocument.assets.map(id => assetIds.get(id) ?? id);
+          for (const object of vectorDocument.objects) if (object.image) object.image.assetId = assetIds.get(object.image.assetId) ?? object.image.assetId;
+        }
+      }
+      // Importing editable vectors and placing them share one existing history unit.
+      get().beginGroup();
+      try {
+        if (vectorDocument) get().execute({ id: 'vector.document.set', document: vectorDocument, assets: vectorAssets });
+        get().execute({ id: 'artwork.add', layer, asset });
+      } finally { get().endGroup(); }
       if (get().selectedLayer !== layer.id) return false;
       pasteCount = nextPaste; set({ lastCommand: '레이어 붙여넣기' }); return true;
     },

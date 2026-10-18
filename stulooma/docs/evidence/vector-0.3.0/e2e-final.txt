@@ -1,0 +1,67 @@
+
+> stulooma@0.3.0 test:e2e
+> playwright test
+
+[WebServer] (node:57667) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:57680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:57711) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 1:07:31 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[WebServer] 1:07:35 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓   1 tests/e2e/autosave.spec.ts:6:1 › actual local IndexedDB autosave restores Korean front/back artwork after reload (8.7s)
+[WebServer] 1:07:39 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓   2 tests/e2e/studio.spec.ts:89:1 › P0 반팔: PNG front/back editing, undo/redo, orbit, modes, project roundtrip, real transparent 2048 PNG (29.5s)
+[WebServer] 1:08:09 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[WebServer] 1:08:24 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓   3 tests/e2e/studio.spec.ts:223:1 › P0 농구: front/back artwork and material survive save/open; GLB UV registration persists in library (22.5s)
+[WebServer] 1:08:31 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓   4 tests/e2e/studio.spec.ts:310:1 › P0 malformed project, truncated GLB, and missing-UV GLB are rejected without losing the current project (7.0s)
+[WebServer] 1:08:38 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓   5 tests/e2e/vector-regression.spec.ts:40:1 › locked paths and descendants of a locked group resist direct handles, inspector edits and arrow transforms (9.1s)
+[WebServer] 1:08:47 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓   6 tests/e2e/vector-regression.spec.ts:83:1 › continuing a translated and scaled open path places new anchors and cubic handles in document coordinates (7.8s)
+[WebServer] 1:08:55 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓   7 tests/e2e/vector-regression.spec.ts:121:1 › masked artwork copy and artboard duplication remap masks to independent objects on the destination artboard (7.2s)
+  ✓   8 tests/e2e/vector-render.spec.ts:9:1 › actual canvas preserves cubic edges, compound holes, transformed paints, clips and group opacity (513ms)
+  ✓   9 tests/e2e/vector-render.spec.ts:99:1 › render cache evicts surfaces when their combined pixel budget exceeds 16 megapixels (363ms)
+  ✓  10 tests/e2e/vector-render.spec.ts:118:1 › mixed garment artwork order and cache respond only to their vector document (449ms)
+  ✓  11 tests/e2e/vector-render.spec.ts:169:1 › Korean text and real outlines produce identical transparent pixels (895ms)
+[WebServer] 1:09:05 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  12 tests/e2e/vector-svg.spec.ts:17:1 › SVG editable round-trip visually preserves native gradients, transformed compound clipping and curve geometry (2.6s)
+[WebServer] 1:09:07 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  13 tests/e2e/vector-workflow.spec.ts:25:1 › Vector workflow: grouped clipping survives artboard duplication and release, and the back binding remains editable after reopening (13.2s)
+[WebServer] 1:09:20 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  14 tests/e2e/vector.spec.ts:64:1 › Vector P0: draw real Boolean geometry, edit an anchor, bind to 3D and preserve editable source plus original PNG through project/SVG round-trip (13.2s)
+[WebServer] 1:09:34 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  15 tests/e2e/vector.spec.ts:117:1 › Vector P0: pen drag creates real cubic handles; direct editing, add-point, grouped undo and zoom preserve geometry (8.4s)
+[WebServer] 1:09:42 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  16 tests/e2e/vector.spec.ts:146:1 › Vector P0/P1: editable compound holes, gradient and clipping produce real transparent PNG and update the same 3D binding (7.5s)
+[WebServer] 1:09:49 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  17 tests/e2e/vector.spec.ts:176:1 › Vector security: active, external and malformed SVG never executes or replaces editable artwork (7.8s)
+[WebServer] 1:09:57 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  18 tests/e2e/vector.spec.ts:193:1 › Vector P1: Korean text input keeps editing shortcuts local and converts licensed glyphs into editable contours with undo and saved source (6.6s)
+[WebServer] 1:10:04 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  19 tests/e2e/vector.spec.ts:227:1 › Vector P1: imported PNG stays byte-exact inside an editable clipping mask through project reopen and clip release (7.5s)
+[WebServer] 1:10:11 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  20 tests/e2e/workspace.spec.ts:54:1 › command palette uses keyboard search, restores focus, and leaves native text editing and composition alone (3.9s)
+[WebServer] 1:10:15 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  21 tests/e2e/workspace.spec.ts:103:1 › clipboard preserves PNG assets across regions, undo/redo, Korean rename, and locked transforms (5.4s)
+[WebServer] 1:10:21 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  22 tests/e2e/workspace.spec.ts:142:1 › 2D precision commands, zoom, fit, grid and snapping work with actual pointer editing (7.0s)
+[WebServer] 1:10:28 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[WebServer] 1:10:33 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  23 tests/e2e/workspace.spec.ts:187:1 › desktop workspace fits 1366×768 and preserves resized or hidden panels after reload (8.2s)
+[WebServer] 1:10:36 PM [vite] (client) [console.warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+  ✓  24 tests/e2e/workspace.spec.ts:232:1 › file drop, history navigation, canvas pan and text scaling preserve real editable data (7.4s)
+
+  24 passed (3.2m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

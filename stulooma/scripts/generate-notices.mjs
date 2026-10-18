@@ -47,6 +47,16 @@ for (const name of ['LICENSE', 'LICENSES.chromium.html']) {
   binaryFiles.push({ name, source: portable(location), bytes: bytes.length, sha256: digest(bytes), ...(name === 'LICENSE' ? { text: bytes.toString('utf8') } : {}) });
 }
 const date = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+const vectorFontPath = 'public/fonts/NotoSansCJKkr-Regular.otf';
+const vectorFontLicensePath = 'public/fonts/NotoSansCJKkr-LICENSE.txt';
+const vectorFontBytes = await readFile(path.join(root, vectorFontPath));
+const vectorFontLicense = await readFile(path.join(root, vectorFontLicensePath));
+const bundledAssets = [{
+  name: 'Noto Sans CJK KR Regular', license: 'OFL-1.1', path: vectorFontPath,
+  bytes: vectorFontBytes.length, sha256: digest(vectorFontBytes),
+  sourceUrl: 'https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf',
+  licenseFile: vectorFontLicensePath, licenseSha256: digest(vectorFontLicense), text: vectorFontLicense.toString('utf8'),
+}];
 const notice = {
   format: 'STULOOMA third-party notices', version: 1, generatedOn: date, timezone: 'Asia/Seoul',
   scope: 'Installed npm runtime dependency tree from npm ls --omit=dev --all --long --json, plus Electron binary license references. Metadata and collected root notice texts are an attribution record, not a legal compatibility assessment. Dev-only tooling and potentially embedded source-level notices require separate release review.',
@@ -55,6 +65,7 @@ const notice = {
   bundleAudit: { source: 'docs/bundle-audit.json', chunks: bundleAudit.chunks },
   unresolved: packages.filter(item => (item.license === 'UNKNOWN' && !item.detectedLicense) || item.licenseFiles.length === 0).map(item => ({ name: item.name, version: item.version, license: item.license, includedInRenderer: item.includedInRenderer, issue: item.license === 'UNKNOWN' ? 'Missing license metadata' : 'No root license/notice file found; inspect upstream package before including it in a future release' })),
   packages,
+  bundledAssets,
 };
 await writeFile(path.join(root, 'THIRD_PARTY_NOTICES.json'), `${JSON.stringify(notice, null, 2)}\n`);
 const text = [
@@ -64,6 +75,7 @@ const text = [
   `Electron ${electron.version}: ${electron.license}`,
   'The Electron/Chromium distribution includes LICENSE and LICENSES.chromium.html. Keep those files with each desktop release.',
   binaryFiles.find(file => file.name === 'LICENSE').text,
+  ...bundledAssets.map(asset => `${'='.repeat(72)}\n${asset.name}\n${asset.license}\n${asset.path}\nSHA-256: ${asset.sha256}\n${asset.text}`),
   ...packages.map(item => [
     '='.repeat(72), `${item.name}@${item.version}`, `Declared license: ${typeof item.license === 'string' ? item.license : JSON.stringify(item.license)}`,
     `Installation: ${item.installation}`,

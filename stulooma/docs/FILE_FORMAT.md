@@ -1,6 +1,8 @@
-# STULOOMA 프로젝트 형식 v1
+# STULOOMA 프로젝트 형식 v1 및 v2
 
 `.stulooma`는 로컬에서 생성·해석하는 ZIP 컨테이너입니다. 파일을 열거나 저장할 때 프로젝트를 서버로 전송하지 않습니다. 공개 PNG·glTF 2.0·ZIP 규격을 사용하며, 다른 의류 소프트웨어의 비공개 형식과 호환성을 주장하지 않습니다.
+
+0.3.0은 기존 v1을 읽고 보존하며, 벡터 문서가 추가된 프로젝트만 v2를 사용합니다. v2의 `vectorDocuments`·벡터 artwork 참조·엄격한 검증 규칙은 [VECTOR_FILE_FORMAT.md](VECTOR_FILE_FORMAT.md)에 있습니다. 아래 기본 컨테이너·원본 에셋 보존·보안 제한은 두 버전에 공통입니다.
 
 ## 컨테이너 구조
 
@@ -10,7 +12,7 @@ assets/<asset-id>.png
 assets/<asset-id>.glb
 ```
 
-`manifest.json`은 UTF-8 JSON입니다. `format`은 `STULOOMA`, `version`은 정수 `1`입니다. 알 수 없는 필수 버전이나 스키마 필드는 경고 오류로 거절하여 데이터가 손실된 상태로 다시 저장되는 것을 막습니다. 선택 확장 정보는 `metadata` 객체에 보관하고 다시 저장할 때 유지합니다.
+`manifest.json`은 UTF-8 JSON입니다. `format`은 `STULOOMA`, `version`은 정수 `1` 또는 벡터를 포함한 `2`입니다. 알 수 없는 필수 버전이나 스키마 필드는 경고 오류로 거절하여 데이터가 손실된 상태로 다시 저장되는 것을 막습니다. 선택 확장 정보는 `metadata` 객체에 보관하고 다시 저장할 때 유지합니다.
 
 컨테이너는 단일 디스크 ZIP32의 저장 방식 0 또는 DEFLATE 방식 8을 지원합니다. 암호화 ZIP, ZIP64, 스트리밍 데이터 디스크립터, 심볼릭 링크의 파일 시스템 추출은 지원하지 않습니다. 파일은 디스크 경로에 압축 해제하지 않고 검증된 바이트로만 읽습니다. 저장기는 `fflate`로 동일한 지원 규격을 생성합니다.
 
@@ -25,7 +27,7 @@ assets/<asset-id>.glb
 | `createdAt`, `updatedAt` | ISO 날짜 문자열 |
 | `garment` | 기본 티셔츠·농구복 또는 사용자 GLB, 선택적인 부위별 메시 연결 |
 | `activeRegion`, `regions` | 선택 부위와 각 부위의 색상·roughness·metalness |
-| `layers` | 독립적인 PNG·텍스트 레이어, 앞뒤 부위, 위치·크기·회전·투명도·표시·잠금 |
+| `layers` | 독립적인 PNG·텍스트·벡터 참조 레이어, 앞뒤 부위, 위치·크기·회전·투명도·표시·잠금 |
 | `assets` | 원본 이름, ID, MIME, 실제 파일 경로 참조 |
 | `camera` | 위치와 바라보는 지점 |
 | `settings` | 작업 텍스처 해상도, 배경색, 투명 배경, 간편·전문가 모드 |

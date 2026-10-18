@@ -1,0 +1,48 @@
+
+> stulooma@0.3.0 test:desktop
+> playwright test --config=playwright.electron.config.ts
+
+
+Running 4 tests using 1 worker
+
+(node:55393) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/electron/desktop.spec.ts:15:1 › desktop uses a restricted bridge, opens and atomically saves native files (11.1s)
+  ✓  2 tests/electron/desktop.spec.ts:217:1 › a project passed at startup opens after the renderer is ready (5.6s)
+  ✓  3 tests/electron/desktop.spec.ts:237:1 › desktop UI shortcuts preserve document destinations and commit focused drafts (13.9s)
+  ✘  4 tests/electron/desktop.spec.ts:362:1 › desktop vector edits preserve legacy assets and round-trip through native project and SVG saves (5.8s)
+
+
+  1) tests/electron/desktop.spec.ts:362:1 › desktop vector edits preserve legacy assets and round-trip through native project and SVG saves
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByRole('textbox', { name: '프로젝트 이름' })
+    Expected: "서울 유니폼 — 김수현 23"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" getByRole('textbox', { name: '프로젝트 이름' }) with timeout 5000ms
+      - waiting for getByRole('textbox', { name: '프로젝트 이름' })
+
+
+      377 |     });
+      378 |     const page = await application.firstWindow();
+    > 379 |     await expect(page.getByRole('textbox', { name: '프로젝트 이름' })).toHaveValue(legacy.name);
+          |                                                                  ^
+      380 |     await expect(page.getByTestId('viewer-state')).toHaveAttribute('data-state', 'ready');
+      381 |     await page.getByRole('button', { name: 'Vector Studio', exact: true }).click();
+      382 |     const studio = page.getByTestId('vector-studio'); await expect(studio).toBeVisible();
+        at /workspace/STULOOMA/stulooma/tests/electron/desktop.spec.ts:379:66
+
+    Error Context: test-results/electron/desktop-desktop-vector-edi-73b9d-ative-project-and-SVG-saves/error-context.md
+
+  1 failed
+    tests/electron/desktop.spec.ts:362:1 › desktop vector edits preserve legacy assets and round-trip through native project and SVG saves
+  3 passed (36.7s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
