@@ -1,0 +1,5 @@
+8ef143b61d99b837a71ebef90d6ff90e128861c52d5613133dfe9ef1cfe152ec  STULOOMA-Windows-0.3.0.zip
+48f4297e827bc431b3fa7b19bb154de51a6781a75fff372774be065c5655e6cb  STULOOMA-Linux-0.3.0.zip
+c4d04287546136a015edd8b931ef1dd7c1d9b9c26140614ed86f4dc16960a0cc  STULOOMA-source-0.3.0.zip
+3cea7f13b5ee53808104a1189c2e10898f54f2ee6b68191c7b6c6b5ea7ddc7c6  vector-compound-3d.stulooma
+235ce1de5a87a1404ea09f40f7506eb1383fe643abecfd059ee781de962f7a9e  vector-korean-outlines.stulooma
